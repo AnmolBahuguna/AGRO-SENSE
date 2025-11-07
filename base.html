@@ -1,0 +1,2108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgroSense - Smart Farming Solution</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        .float-animation { animation: float 3s ease-in-out infinite; }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in-up { 
+            animation: fadeInUp 0.8s ease-out;
+            animation-fill-mode: both;
+        }
+        
+        .gradient-bg {
+            background: 
+                linear-gradient(135deg, rgba(25, 236, 67, 0.95) 0%, rgba(5, 150, 105, 0.9) 50%, rgba(4, 120, 87, 0.95) 100%),
+                radial-gradient(circle at 20% 50%, rgba(4, 246, 8, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(16, 185, 129, 0.3) 0%, transparent 50%),
+                linear-gradient(to bottom, #047857, #065f46);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gradient-bg::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                repeating-linear-gradient(
+                    45deg,
+                    transparent,
+                    transparent 60px,
+                    rgba(255, 255, 255, 0.03) 60px,
+                    rgba(255, 255, 255, 0.03) 120px
+                );
+            animation: pattern-slide 20s linear infinite;
+            z-index: 0;
+        }
+
+        .gradient-bg::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 30%),
+                radial-gradient(circle at 70% 60%, rgba(255, 255, 255, 0.08) 0%, transparent 40%);
+            z-index: 0;
+        }
+
+        @keyframes pattern-slide {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(60px, 60px); }
+        }
+
+        .gradient-bg > * {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .voice-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .5; }
+        }
+
+        .feature-card {
+            transition: all 0.3s ease;
+            border: 1px solid #e5e7eb;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            border-color: #10b981;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 100%;
+            margin-top: 0.5rem;
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            min-width: 180px;
+            z-index: 50;
+            overflow: hidden;
+        }
+
+        .dropdown-menu.active {
+            display: block;
+            animation: fadeInUp 0.3s ease-out;
+        }
+
+        .lang-option {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .lang-option:last-child {
+            border-bottom: none;
+        }
+
+        .lang-option:hover {
+            background: #f0fdf4;
+            padding-left: 1.25rem;
+        }
+
+        .lang-option.active {
+            background: #dcfce7;
+            font-weight: 600;
+        }
+
+        .voice-listening {
+            background: #ef4444 !important;
+            animation: pulse 1s infinite;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 320px;
+            height: 100vh;
+            background: white;
+            box-shadow: -5px 0 25px rgba(0,0,0,0.2);
+            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 100;
+            overflow-y: auto;
+        }
+
+        .sidebar.active {
+            right: 0;
+        }
+
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(0,0,0,0.5);
+            z-index: 99;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #10b981, #059669);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            margin: 0 auto 1rem;
+            border: 4px solid #f0fdf4;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .sidebar-option {
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .sidebar-option:hover {
+            background: #f0fdf4;
+            padding-left: 2rem;
+        }
+
+        .sidebar-option i {
+            width: 24px;
+            text-align: center;
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 85%;
+                max-width: 320px;
+            }
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        .stats-bg {
+            background-image: 
+                linear-gradient(90deg, #f0fdf4 1px, transparent 1px),
+                linear-gradient(#f0fdf4 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        .interactive-hover {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .interactive-hover:hover {
+            transform: scale(1.05) rotate(1deg);
+        }
+
+        .glow-on-hover {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glow-on-hover::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .glow-on-hover:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .particles-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: float-particle 15s infinite;
+        }
+
+        @keyframes float-particle {
+            0%, 100% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.6;
+            }
+            90% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(50px);
+                opacity: 0;
+            }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+        }
+
+        
+        .hero-section {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: #000;
+        }
+
+        .slideshow-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 2s ease-in-out;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .slide.active {
+            opacity: 0.4;
+        }
+
+        .slide-1 {
+            background-image: url('https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=1920');
+        }
+
+        .slide-2 {
+            background-image: url('https://images.unsplash.com/photo-1574943320219-553eb213f72d?w=1920');
+        }
+
+        .slide-3 {
+            background-image: url('https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=1920');
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, rgba(30, 58, 32, 0.7) 0%, rgba(15, 29, 16, 0.95) 100%);
+            z-index: 2;
+        }
+
+        .floating-elements {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 3;
+            pointer-events: none;
+        }
+
+        .float-leaf {
+            position: absolute;
+            font-size: 2rem;
+            color: rgba(144, 238, 144, 0.3);
+            animation: float-across 20s linear infinite;
+        }
+
+        @keyframes float-across {
+            0% {
+                transform: translateX(-100px) translateY(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.6;
+            }
+            90% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateX(calc(100vw + 100px)) translateY(-200px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .particles-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 3;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(144, 238, 144, 0.6);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: float-particle linear infinite;
+        }
+
+        @keyframes float-particle {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.2;
+            z-index: 2;
+            animation: pulse-glow 6s ease-in-out infinite;
+        }
+
+        .orb-1 {
+            top: 20%;
+            left: 15%;
+            width: 400px;
+            height: 400px;
+            background: linear-gradient(135deg, #7cfc00, #32cd32);
+        }
+
+        .orb-2 {
+            bottom: 20%;
+            right: 15%;
+            width: 500px;
+            height: 500px;
+            background: linear-gradient(135deg, #90ee90, #98fb98);
+            animation-delay: 3s;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% {
+                transform: scale(1) rotate(0deg);
+                opacity: 0.2;
+            }
+            50% {
+                transform: scale(1.3) rotate(180deg);
+                opacity: 0.35;
+            }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            color: white;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .content-left {
+            text-align: left;
+        }
+
+        .content-right {
+            position: relative;
+        }
+
+        .floating-badge {
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            background: linear-gradient(135deg, #7cfc00, #32cd32);
+            color: #1e3a20;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            box-shadow: 0 10px 30px rgba(124, 252, 0, 0.4);
+            animation: float-badge 3s ease-in-out infinite;
+            z-index: 5;
+        }
+
+        @keyframes float-badge {
+            0%, 100% {
+                transform: translateY(0px) rotate(-5deg);
+            }
+            50% {
+                transform: translateY(-15px) rotate(5deg);
+            }
+        }
+
+        .icon-wrapper {
+            display: inline-block;
+            margin-bottom: 1.5rem;
+            animation: float-icon 3s ease-in-out infinite;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+
+        .icon-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle, rgba(124, 252, 0, 0.3), transparent);
+            border-radius: 50%;
+            z-index: -1;
+            animation: pulse-ring 2s ease-out infinite;
+        }
+
+        @keyframes pulse-ring {
+            0% {
+                transform: translate(-50%, -50%) scale(0.8);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        .icon-wrapper:hover {
+            transform: scale(1.15) rotate(10deg);
+        }
+
+        .icon-wrapper i {
+            font-size: 5rem;
+            filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.5));
+            background: linear-gradient(135deg, #7cfc00, #90ee90);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            transition: all 0.3s ease;
+        }
+
+        @keyframes float-icon {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-25px);
+            }
+        }
+
+        h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+            background: linear-gradient(135deg, #fff, #90ee90);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 2px 4px 20px rgba(0, 0, 0, 0.5);
+            animation: fade-in-up 1s ease-out 0.2s backwards;
+        }
+
+        .subtitle {
+            font-size: 1.4rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+            font-weight: 300;
+            line-height: 1.6;
+            text-shadow: 1px 2px 10px rgba(0, 0, 0, 0.5);
+            animation: fade-in-up 1s ease-out 0.4s backwards;
+        }
+
+        @keyframes fade-in-up {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+            animation: fade-in-up 1s ease-out 0.5s backwards;
+        }
+
+        .stat-box {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            padding: 1rem;
+            border-radius: 12px;
+            border: 1px solid rgba(124, 252, 0, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .stat-box:hover {
+            background: rgba(124, 252, 0, 0.1);
+            transform: translateY(-5px);
+            border-color: rgba(124, 252, 0, 0.5);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #7cfc00;
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            animation: fade-in-up 1s ease-out 0.6s backwards;
+        }
+
+        .btn {
+            padding: 1.2rem 3rem;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.4s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.7rem;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::before {
+            width: 400px;
+            height: 400px;
+        }
+
+        .btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #7cfc00, #32cd32);
+            color: #1e3a20;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 20px 50px rgba(124, 252, 0, 0.5);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            color: #1e3a20;
+            transform: translateY(-5px);
+            border-color: white;
+        }
+
+        .image-showcase {
+            position: relative;
+            animation: fade-in-up 1s ease-out 0.7s backwards;
+        }
+
+        .main-image-container {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+            border: 3px solid rgba(124, 252, 0, 0.3);
+            transition: all 0.5s ease;
+            cursor: pointer;
+        }
+
+        .main-image-container:hover {
+            transform: scale(1.05) rotate(2deg);
+            box-shadow: 0 40px 80px rgba(124, 252, 0, 0.4);
+            border-color: rgba(124, 252, 0, 0.6);
+        }
+
+        .main-image-container img {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+
+        .main-image-container:hover img {
+            transform: scale(1.1);
+        }
+
+        .image-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            padding: 2rem;
+            transform: translateY(100%);
+            transition: transform 0.4s ease;
+        }
+
+        .main-image-container:hover .image-overlay {
+            transform: translateY(0);
+        }
+
+        .overlay-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .overlay-text {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .thumbnail-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .thumbnail {
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .thumbnail::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(124, 252, 0, 0.3);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .thumbnail:hover {
+            transform: translateY(-5px);
+            border-color: #7cfc00;
+            box-shadow: 0 10px 25px rgba(124, 252, 0, 0.3);
+        }
+
+        .thumbnail:hover::after {
+            opacity: 1;
+        }
+
+        .thumbnail img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .thumbnail:hover img {
+            transform: scale(1.1);
+        }
+
+        .feature-badges {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+            animation: fade-in-up 1s ease-out 0.8s backwards;
+        }
+
+        .badge {
+            background: rgba(124, 252, 0, 0.15);
+            border: 1px solid rgba(124, 252, 0, 0.3);
+            padding: 0.7rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .badge:hover {
+            background: rgba(124, 252, 0, 0.25);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(124, 252, 0, 0.3);
+        }
+
+        .badge i {
+            color: #7cfc00;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            animation: bounce 2s infinite;
+            cursor: pointer;
+        }
+
+        .scroll-indicator i {
+            font-size: 2.5rem;
+            color: #7cfc00;
+            opacity: 0.8;
+            filter: drop-shadow(0 0 10px rgba(124, 252, 0, 0.5));
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            40% {
+                transform: translateX(-50%) translateY(-20px);
+            }
+            60% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .content-left {
+                text-align: center;
+            }
+
+            h1 {
+                font-size: 3rem;
+            }
+
+            .cta-buttons {
+                justify-content: center;
+            }
+
+            .stats-grid {
+                max-width: 500px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .feature-badges {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            .subtitle {
+                font-size: 1.1rem;
+            }
+            .icon-wrapper i {
+                font-size: 3.5rem;
+            }
+            .cta-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .main-image-container img {
+                height: 300px;
+            }
+            .thumbnail-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Hero Title Animation */
+.hero-title {
+    perspective: 1000px;
+}
+
+.word-animate {
+    display: inline-block;
+    opacity: 0;
+    animation: wordSlideIn 0.8s ease-out forwards;
+    margin: 0 0.3rem;
+}
+
+@keyframes wordSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(50px) rotateX(-90deg);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) rotateX(0);
+    }
+}
+
+.gradient-text {
+    background: linear-gradient(135deg, #7cfc00, #90ee90, #32cd32, #00ff00);
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradientShift 3s ease infinite, wordSlideIn 0.8s ease-out forwards;
+    font-weight: 900;
+    text-shadow: 0 0 30px rgba(124, 252, 0, 0.5);
+    position: relative;
+}
+
+.gradient-text::after {
+    content: 'Harvest';
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: linear-gradient(135deg, #7cfc00, #32cd32);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: blur(20px);
+    opacity: 0.5;
+    z-index: -1;
+}
+
+@keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+/* Subtitle with Rotating Words */
+.subtitle {
+    font-size: 1.4rem;
+    margin-bottom: 2rem;
+    opacity: 0.95;
+    font-weight: 300;
+    line-height: 1.8;
+    text-shadow: 2px 3px 15px rgba(0, 0, 0, 0.6);
+    animation: fade-in-up 1s ease-out 0.8s backwards;
+}
+
+.highlight-text {
+    position: relative;
+    display: inline-block;
+    font-weight: 600;
+    color: #7cfc00;
+    text-shadow: 0 0 20px rgba(124, 252, 0, 0.6);
+    min-width: 250px;
+    height: 1.8rem;
+    vertical-align: bottom;
+}
+
+.rotate-words {
+    position: relative;
+    display: inline-block;
+}
+
+.rotate-words .word {
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    white-space: nowrap;
+    animation: rotateWord 12s infinite;
+}
+
+.rotate-words .word.active {
+    position: relative;
+}
+
+.rotate-words .word:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.rotate-words .word:nth-child(2) {
+    animation-delay: 3s;
+}
+
+.rotate-words .word:nth-child(3) {
+    animation-delay: 6s;
+}
+
+.rotate-words .word:nth-child(4) {
+    animation-delay: 9s;
+}
+
+@keyframes rotateWord {
+    0%, 25% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    27%, 100% {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.9);
+    }
+}
+
+/* Glowing underline effect on hover */
+.hero-title:hover .word-animate {
+    animation: bounce 0.6s ease;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+/* Pulse effect for emphasis */
+.gradient-text {
+    animation: wordSlideIn 0.8s ease-out forwards, 
+               gradientShift 3s ease infinite,
+               pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+    0%, 100% {
+        filter: brightness(1) drop-shadow(0 0 10px rgba(124, 252, 0, 0.5));
+    }
+    50% {
+        filter: brightness(1.2) drop-shadow(0 0 25px rgba(124, 252, 0, 0.8));
+    }
+}
+
+/* Interactive hover on subtitle */
+.subtitle:hover .highlight-text {
+    transform: scale(1.05);
+    transition: transform 0.3s ease;
+}
+
+/* Typing cursor effect */
+.highlight-text::after {
+    content: '|';
+    position: absolute;
+    right: -10px;
+    animation: blink 1s step-end infinite;
+    color: #7cfc00;
+    font-weight: 300;
+}
+
+@keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+    </style>
+</head>
+
+
+
+<body class="bg-gray-50">
+    <!-- Sidebar Overlay -->
+    <div id="sidebarOverlay" class="sidebar-overlay"></div>
+    <!-- Sidebar -->
+    <div id="sidebar" class="sidebar">
+        <div class="bg-gradient-to-br from-green-600 to-green-700 text-white p-6">
+            <button id="closeSidebar" class="absolute top-4 right-4 text-white text-2xl hover:rotate-90 transition-transform duration-300">
+                <i class="fas fa-times"></i>
+            </button>
+            
+            <div class="text-center pt-4">
+                <div class="profile-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-1">Welcome, Farmer!</h3>
+                <p class="text-green-100 text-sm">Manage your farm smartly</p>
+            </div>
+        </div>
+
+        <div class="py-4">
+            <a href="#" class="sidebar-option text-gray-700 hover:text-green-600">
+                <i class="fas fa-user-circle text-green-600"></i>
+                <span class="font-medium">My Profile</span>
+            </a>
+            
+            <a href="#" class="sidebar-option text-gray-700 hover:text-green-600">
+                <i class="fas fa-tachometer-alt text-blue-600"></i>
+                <span class="font-medium">Dashboard</span>
+            </a>
+            
+           <a href="weather.html" class="sidebar-option text-gray-700 hover:text-green-600">
+              <i class="fas fa-cloud-sun text-blue-500"></i>
+               <span class="font-medium">weather</span>
+              </a>
+            <a href="#" class="sidebar-option text-gray-700 hover:text-green-600">
+                <i class="fas fa-chart-line text-yellow-600"></i>
+                <span class="font-medium">Chatbot</span>
+            </a>
+            
+            <a href="settings.html" class="sidebar-option text-gray-700 hover:text-green-600">
+                <i class="fas fa-cog text-gray-600"></i>
+                <span class="font-medium">Settings</span>
+            </a>
+            
+            <a href="helpcenter.html" class="sidebar-option text-gray-700 hover:text-green-600">
+                <i class="fas fa-question-circle text-purple-600"></i>
+                <span class="font-medium">Help & Support</span>
+            </a>
+            
+            <div class="px-6 py-4">
+                <div class="border-t border-gray-200 pt-4">
+                    <a href="#" class="flex items-center gap-3 text-red-600 hover:text-red-700 font-medium">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+   <!-- Replace your existing navigation section with this updated one -->
+
+<nav class="bg-white shadow-lg sticky top-0 z-40">
+    <div class="container mx-auto px-4 py-3 lg:py-4">
+        <div class="flex items-center justify-between">
+            <a href="#" class="flex items-center space-x-2">
+                <i class="fas fa-leaf text-2xl lg:text-3xl text-green-600"></i>
+                <span class="text-xl lg:text-2xl font-bold text-gray-800">AgroSense</span>
+            </a>
+            
+            <div class="flex items-center space-x-3 lg:space-x-4">
+                <button id="voiceBtn" class="bg-green-600 text-white p-2 lg:p-3 rounded-full hover:bg-green-700 transition shadow-lg" title="Voice Assistant">
+                    <i class="fas fa-microphone text-base lg:text-lg"></i>
+                </button>
+
+                <div class="relative">
+                    <button id="langBtn" class="flex items-center space-x-2 bg-gray-100 px-3 lg:px-4 py-2 rounded-lg hover:bg-gray-200 transition">
+                        <i class="fas fa-globe text-green-600"></i>
+                        <span id="currentLang" class="font-medium text-sm lg:text-base">English</span>
+                        <i class="fas fa-chevron-down text-xs"></i>
+                    </button>
+                    <div id="langDropdown" class="dropdown-menu">
+                        <div class="lang-option active" data-lang="en" data-fullname="English">
+                            <span class="text-xl"></span>
+                            <span class="text-sm">English</span>
+                        </div>
+                        <div class="lang-option" data-lang="hi" data-fullname="हिंदी">
+                            <span class="text-xl"></span>
+                         <span class="text-sm">हिंदी</span>
+                        </div>
+                        <div class="lang-option" data-lang="pa" data-fullname="ਪੰਜਾਬੀ">
+                            <span class="text-xl"></span>
+                            <span class="text-sm">ਪੰਜਾਬੀ</span>
+                        </div>
+                        <div class="lang-option" data-lang="kn" data-fullname="ಕನ್ನಡ">
+                            <span class="text-xl"></span>
+                            <span class="text-sm">ಕನ್ನಡ</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- NEW: Login Button -->
+                <a href="login.html" class="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-4 lg:px-5 py-2 lg:py-2.5 rounded-lg hover:shadow-lg transition-all hover:scale-105 flex items-center space-x-2 font-semibold">
+                    <i class="fas fa-sign-in-alt text-base lg:text-lg"></i>
+                    <span class="hidden sm:inline text-sm lg:text-base">Login</span>
+                </a>
+
+                <button id="openSidebar" class="bg-green-600 text-white p-2 lg:p-3 rounded-full hover:bg-green-700 transition shadow-lg" title="Profile Menu">
+                    <i class="fas fa-bars text-base lg:text-lg"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- OPTIONAL: Add a floating login button at the bottom of your page (before closing </body> tag) -->
+
+<!-- Floating Login Button (Optional - Choose either navigation button OR floating button) -->
+<a href="login.html" class="fixed bottom-6 right-6 bg-gradient-to-r from-green-600 to-emerald-600 text-white w-14 h-14 lg:w-16 lg:h-16 rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition-all duration-300 z-50 group">
+    <i class="fas fa-sign-in-alt text-xl lg:text-2xl group-hover:animate-pulse"></i>
+    <span class="absolute -top-10 right-0 bg-gray-800 text-white text-xs px-3 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+        Login / Sign Up
+    </span>
+</a>
+
+    <!-- Hero Section -->
+   
+               <section class="hero-section">
+        <div class="slideshow-container">
+            <div class="slide slide-1 active"></div>
+            <div class="slide slide-2"></div>
+          
+        </div>
+        
+        <div class="hero-overlay"></div>
+        
+        <div class="glow-orb orb-1"></div>
+        <div class="glow-orb orb-2"></div>
+        
+        <div class="floating-elements" id="floatingLeaves"></div>
+        <div class="particles-container" id="particlesContainer"></div>
+        
+        <div class="hero-content">
+            <div class="content-left">
+                <div class="icon-wrapper">
+                    <i class="fas fa-seedling"></i>
+                </div>
+                
+               <h1 class="hero-title">
+    <span class="word-animate" style="animation-delay: 0s">Cultivating</span>
+    <span class="word-animate" style="animation-delay: 0.2s">Tomorrow's</span>
+    <span class="word-animate gradient-text" style="animation-delay: 0.4s">Harvest</span>
+    <span class="word-animate" style="animation-delay: 0.6s">Today</span>
+</h1>
+<p class="subtitle typing-effect">
+    Empowering farmers with 
+    <span class="highlight-text rotate-words">
+        <span class="word active">innovative solutions</span>
+        <span class="word">sustainable practices</span>
+        <span class="word">cutting-edge technology</span>
+        <span class="word">smart farming tools</span>
+    </span>
+    for a greener future
+</p>
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-number" data-target="15000">0</div>
+                        <div class="stat-label">Happy Farmers</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number" data-target="98">0%</div>
+                        <div class="stat-label">Success Rate</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number" data-target="50">0+</div>
+                        <div class="stat-label">Crop Varieties</div>
+                    </div>
+                </div>
+                
+               <div class="cta-buttons">
+                <a href="login.html" class="btn btn-primary">
+                 <span>Start Growing</span>
+                     <i class="fas fa-arrow-right"></i>
+                     </a>
+                   <a href="https://youtu.be/8Cda6QTnfbY?si=PCQTWIJXStGBKg5C" target="_blank" rel="noopener noreferrer">
+                      <button class="btn btn-secondary">
+                      <span>Watch Demo</span>
+                     <i class="fas fa-play-circle"></i>
+                </button>
+               </a>
+                </div>
+
+                <div class="feature-badges">
+                    <div class="badge">
+                        <i class="fas fa-leaf"></i>
+                        <span>100% Organic</span>
+                    </div>
+                    <div class="badge">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Certified</span>
+                    </div>
+                    <div class="badge">
+                        <i class="fas fa-clock"></i>
+                        <span>24/7 Support</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="content-right">
+                <div class="floating-badge">
+                    <i class="fas fa-award"></i> Award Winning
+                </div>
+                
+                <div class="image-showcase">
+                    <div class="main-image-container" id="mainImageContainer">
+                        <img id="mainImage" src="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=800" alt="Farming">
+                        <div class="image-overlay">
+                            <div class="overlay-title">Sustainable Farming</div>
+                            <div class="overlay-text">Growing with nature, not against it</div>
+                        </div>
+                    </div>
+                    
+                    <div class="thumbnail-grid">
+                        <div class="thumbnail" data-image="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=800" data-title="Sustainable Farming" data-text="Growing with nature, not against it">
+                            <img src="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=300" alt="Farm 1">
+                        </div>
+                        <div class="thumbnail" data-image="https://images.unsplash.com/photo-1574943320219-553eb213f72d?w=800" data-title="Smart Technology" data-text="Innovation meets tradition">
+                            <img src="https://images.unsplash.com/photo-1574943320219-553eb213f72d?w=300" alt="Farm 2">
+                        </div>
+                        <div class="thumbnail" data-image="https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=800" data-title="Fresh Harvest" data-text="Quality you can taste">
+                            <img src="https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=300" alt="Farm 3">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="scroll-indicator">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </section>
+                <div class="flex flex-col sm:flex-row flex-wrap gap-3 lg:gap-4 justify-center px-4">
+                    <a href="#features" class="glow-on-hover bg-white text-green-600 px-8 lg:px-10 py-3 lg:py-4 rounded-lg text-base lg:text-lg font-semibold hover:bg-green-50 inline-flex items-center justify-center gap-2 shadow-xl transition transform hover:scale-110">
+                        Get Started Free
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <a href="#about" class="glow-on-hover glass-effect text-white px-8 lg:px-10 py-3 lg:py-4 rounded-lg text-base lg:text-lg font-semibold hover:bg-white hover:bg-opacity-20 inline-flex items-center justify-center gap-2 transition transform hover:scale-110">
+                        <i class="fas fa-info-circle"></i>
+                        Learn More
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="scroll-indicator">
+            <i class="fas fa-chevron-down text-2xl text-white opacity-70"></i>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="py-12 lg:py-16 bg-white stats-bg">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 text-center">
+                <div class="fade-in-up bg-white p-6 rounded-xl shadow-md interactive-hover">
+                    <div class="text-3xl lg:text-4xl font-bold text-green-600 mb-2">10K+</div>
+                    <div class="text-sm lg:text-base text-gray-600">Active Farmers</div>
+                </div>
+                <div class="fade-in-up bg-white p-6 rounded-xl shadow-md interactive-hover" style="animation-delay: 0.1s">
+                    <div class="text-3xl lg:text-4xl font-bold text-green-600 mb-2">50K+</div>
+                    <div class="text-sm lg:text-base text-gray-600">Acres Monitored</div>
+                </div>
+                <div class="fade-in-up bg-white p-6 rounded-xl shadow-md interactive-hover" style="animation-delay: 0.2s">
+                    <div class="text-3xl lg:text-4xl font-bold text-green-600 mb-2">99.9%</div>
+                    <div class="text-sm lg:text-base text-gray-600">Uptime</div>
+                </div>
+                <div class="fade-in-up bg-white p-6 rounded-xl shadow-md interactive-hover" style="animation-delay: 0.3s">
+                    <div class="text-3xl lg:text-4xl font-bold text-green-600 mb-2">24/7</div>
+                    <div class="text-sm lg:text-base text-gray-600">Support</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-16 lg:py-24 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12 lg:mb-16">
+                <h2 class="text-3xl lg:text-5xl font-bold text-gray-800 mb-4">Our Features</h2>
+                <p class="text-lg lg:text-xl text-gray-600">Everything you need to manage your farm efficiently</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="feature-card bg-white p-8 rounded-xl">
+                    <div class="text-5xl mb-6 text-green-600">
+                        <i class="fas fa-cloud-sun"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 text-gray-800">Weather Forecast</h3>
+                    <p class="text-gray-600 leading-relaxed">Get accurate 7-day weather predictions with AI-powered insights tailored for your location.</p>
+                </div>
+
+                <div class="feature-card bg-white p-8 rounded-xl">
+                    <div class="text-5xl mb-6 text-blue-600">
+                        <i class="fas fa-tint"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 text-gray-800">Soil Monitoring</h3>
+                    <p class="text-gray-600 leading-relaxed">Real-time soil moisture and nutrient tracking to optimize irrigation and fertilization.</p>
+                </div>
+
+                <div class="feature-card bg-white p-8 rounded-xl">
+                    <div class="text-5xl mb-6 text-yellow-600">
+
+
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 text-gray-800">Market Prices</h3>
+                    <p class="text-gray-600 leading-relaxed">Live market prices and trends to help you make informed selling decisions.</p>
+                </div>
+
+                <div class="feature-card bg-white p-8 rounded-xl">
+                    <div class="text-5xl mb-6 text-red-600">
+                        <i class="fas fa-bug"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 text-gray-800">Pest Detection</h3>
+                    <p class="text-gray-600 leading-relaxed">AI-powered pest identification and treatment recommendations for healthy crops.</p>
+                </div>
+
+                <div class="feature-card bg-white p-8 rounded-xl">
+                    <div class="text-5xl mb-6 text-purple-600">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 text-gray-800">AI Assistant</h3>
+                    <p class="text-gray-600 leading-relaxed">24/7 voice-enabled AI assistant to answer farming questions in your language.</p>
+                </div>
+
+                <div class="feature-card bg-white p-8 rounded-xl">
+                    <div class="text-5xl mb-6 text-green-600">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 text-gray-800">Mobile App</h3>
+                    <p class="text-gray-600 leading-relaxed">Access all features on-the-go with our user-friendly mobile application.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-16 lg:py-24 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="order-2 md:order-1">
+                    <h2 class="text-3xl lg:text-5xl font-bold text-gray-800 mb-6">About AgroSense</h2>
+                    <p class="text-gray-600 text-lg mb-6 leading-relaxed">
+                        AgroSense is revolutionizing agriculture by combining cutting-edge technology with traditional farming wisdom. Our platform empowers farmers with data-driven insights to increase productivity and sustainability.
+                    </p>
+                    <p class="text-gray-600 text-lg mb-8 leading-relaxed">
+                        With features like real-time monitoring, weather forecasting, and market intelligence, we're helping farmers make smarter decisions and achieve better yields.
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <div class="flex items-center gap-3 bg-green-50 px-6 py-3 rounded-lg">
+                            <i class="fas fa-check-circle text-green-600 text-xl"></i>
+                            <span class="font-semibold text-gray-700">Easy to Use</span>
+                        </div>
+                        <div class="flex items-center gap-3 bg-green-50 px-6 py-3 rounded-lg">
+                            <i class="fas fa-check-circle text-green-600 text-xl"></i>
+                            <span class="font-semibold text-gray-700">Affordable</span>
+                        </div>
+                        <div class="flex items-center gap-3 bg-green-50 px-6 py-3 rounded-lg">
+                            <i class="fas fa-check-circle text-green-600 text-xl"></i>
+                            <span class="font-semibold text-gray-700">Reliable</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="order-1 md:order-2">
+                    <div class="relative">
+                        <div class="absolute -top-4 -left-4 w-full h-full bg-green-100 rounded-2xl"></div>
+                        <img src="https://images.unsplash.com/photo-1574943320219-553eb213f72d?w=600&h=400&fit=crop" alt="Smart Farming" class="relative rounded-2xl shadow-2xl w-full h-auto">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="py-16 lg:py-24 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12 lg:mb-16">
+                <h2 class="text-3xl lg:text-5xl font-bold text-gray-800 mb-4">What Farmers Say</h2>
+                <p class="text-lg lg:text-xl text-gray-600">Real stories from our farming community</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition">
+                    <div class="flex items-center mb-6">
+                        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center text-green-600 text-2xl mr-4">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-gray-800 text-lg">Rajesh Kumar</h4>
+                            <p class="text-gray-500 text-sm">Punjab</p>
+                        </div>
+                    </div>
+                    <div class="text-yellow-400 mb-4 text-xl">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="text-gray-600 leading-relaxed">"AgroSense has transformed my farming. The weather predictions help me plan irrigation perfectly. My yield increased by 30%!"</p>
+                </div>
+
+                <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition">
+                    <div class="flex items-center mb-6">
+                        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center text-green-600 text-2xl mr-4">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-gray-800 text-lg">Priya Sharma</h4>
+                            <p class="text-gray-500 text-sm">Karnataka</p>
+                        </div>
+                    </div>
+                    <div class="text-yellow-400 mb-4 text-xl">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="text-gray-600 leading-relaxed">"The pest detection feature saved my crop! Early warnings helped me take action before damage spread. Highly recommended!"</p>
+                </div>
+
+                <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition">
+                    <div class="flex items-center mb-6">
+                        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center text-green-600 text-2xl mr-4">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-gray-800 text-lg">Amarjeet Singh</h4>
+                            <p class="text-gray-500 text-sm">Haryana</p>
+                        </div>
+                    </div>
+                    <div class="text-yellow-400 mb-4 text-xl">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="text-gray-600 leading-relaxed">"Market price updates help me sell at the right time. The AI assistant answers my questions instantly in Punjabi. Amazing!"</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="gradient-bg text-white py-16 lg:py-20 relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute top-10 left-20 w-64 h-64 bg-white rounded-full blur-3xl animate-pulse"></div>
+            <div class="absolute bottom-10 right-20 w-80 h-80 bg-white rounded-full blur-3xl animate-pulse" style="animation-delay: 1.5s"></div>
+        </div>
+        
+        <div class="container mx-auto px-4 text-center relative z-10">
+            <h2 class="text-3xl lg:text-5xl font-bold mb-6 drop-shadow-lg">Ready to Transform Your Farm?</h2>
+            <p class="text-lg lg:text-xl mb-8 text-green-50 max-w-2xl mx-auto drop-shadow-md">Join thousands of farmers who are already using AgroSense to increase productivity and profitability.</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="#" class="glow-on-hover bg-white text-green-600 px-10 py-4 rounded-lg text-lg font-semibold hover:bg-green-50 inline-flex items-center justify-center gap-2 shadow-xl transition transform hover:scale-110">
+                    <i class="fas fa-rocket"></i>
+                    Start Free Trial
+                </a>
+                <a href="feedbackform.html" class="glow-on-hover glass-effect text-white px-10 py-4 rounded-lg text-lg font-semibold hover:bg-white hover:bg-opacity-20 inline-flex items-center justify-center gap-2 transition transform hover:scale-110">
+                    <i class="fas fa-phone"></i>
+                        Contact
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <i class="fas fa-leaf text-3xl text-green-500"></i>
+                        <span class="text-2xl font-bold">AgroSense</span>
+                    </div>
+                    <p class="text-gray-400 leading-relaxed">Empowering farmers with smart technology for sustainable agriculture.</p>
+                </div>
+
+                <div>
+                    <h4 class="text-lg font-bold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-green-500 transition">Home</a></li>
+                        <li><a href="#features" class="text-gray-400 hover:text-green-500 transition">Features</a></li>
+                        <li><a href="#about" class="text-gray-400 hover:text-green-500 transition">About Us</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-green-500 transition">Pricing</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-lg font-bold mb-4">Support</h4>
+                    <ul class="space-y-2">
+                        <li><a href="helpcenter.html" class="text-gray-400 hover:text-green-500 transition">Help Center</a></li>
+                        <li><a href="feedbackform.html" class="text-gray-400 hover:text-green-500 transition">Contact Us</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-green-500 transition">FAQs</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-green-500 transition">Privacy Policy</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-lg font-bold mb-4">Connect With Us</h4>
+                    <div class="flex space-x-4 mb-4">
+                        <a href="https://www.facebook.com/" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-green-600 transition">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="https://x.com/" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-green-600 transition">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="https://www.instagram.com/" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-green-600 transition">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://www.youtube.com/" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-green-600 transition">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                    <p class="text-gray-400 text-sm">Email: support@agrosense.com</p>
+                    <p class="text-gray-400 text-sm">Phone: +91 1800-123-4567</p>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-800 pt-8 text-center">
+                <p class="text-gray-400">&copy; 2024 AgroSense. All rights reserved. Made with <i class="fas fa-heart text-red-500"></i> for farmers.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Rotating words animation
+document.addEventListener('DOMContentLoaded', function() {
+    const words = document.querySelectorAll('.rotate-words .word');
+    let currentIndex = 0;
+    
+    setInterval(() => {
+        words[currentIndex].classList.remove('active');
+        currentIndex = (currentIndex + 1) % words.length;
+        words[currentIndex].classList.add('active');
+    }, 3000);
+    
+    // Add interactive click effect on title
+    const heroTitle = document.querySelector('.hero-title');
+    if (heroTitle) {
+        heroTitle.addEventListener('click', function() {
+            this.querySelectorAll('.word-animate').forEach((word, index) => {
+                word.style.animation = 'none';
+                setTimeout(() => {
+                    word.style.animation = '';
+                }, 10);
+            });
+        });
+    }
+});
+        // Language Dropdown
+        const langBtn = document.getElementById('langBtn');
+        const langDropdown = document.getElementById('langDropdown');
+        const currentLang = document.getElementById('currentLang');
+        const langOptions = document.querySelectorAll('.lang-option');
+
+        langBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            langDropdown.classList.toggle('active');
+        });
+
+        langOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                langOptions.forEach(opt => opt.classList.remove('active'));
+                option.classList.add('active');
+                currentLang.textContent = option.dataset.fullname;
+                langDropdown.classList.remove('active');
+            });
+        });
+
+        document.addEventListener('click', () => {
+            langDropdown.classList.remove('active');
+        });
+
+        // Voice Assistant
+        const voiceBtn = document.getElementById('voiceBtn');
+        let isListening = false;
+
+        voiceBtn.addEventListener('click', () => {
+            isListening = !isListening;
+            if (isListening) {
+                voiceBtn.classList.add('voice-listening');
+                voiceBtn.innerHTML = '<i class="fas fa-stop text-base lg:text-lg"></i>';
+                // Simulate voice recognition
+                setTimeout(() => {
+                    alert('Voice assistant activated! (Demo mode)');
+                    isListening = false;
+                    voiceBtn.classList.remove('voice-listening');
+                    voiceBtn.innerHTML = '<i class="fas fa-microphone text-base lg:text-lg"></i>';
+                }, 2000);
+            } else {
+                voiceBtn.classList.remove('voice-listening');
+                voiceBtn.innerHTML = '<i class="fas fa-microphone text-base lg:text-lg"></i>';
+            }
+        });
+
+        // Sidebar
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        const openSidebar = document.getElementById('openSidebar');
+        const closeSidebar = document.getElementById('closeSidebar');
+
+        openSidebar.addEventListener('click', () => {
+            sidebar.classList.add('active');
+            sidebarOverlay.classList.add('active');
+        });
+
+        closeSidebar.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            sidebarOverlay.classList.remove('active');
+        });
+
+        sidebarOverlay.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            sidebarOverlay.classList.remove('active');
+        });
+
+        // Particles Animation
+        const particlesContainer = document.getElementById('particlesContainer');
+        const particleCount = 30;
+
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            particle.style.width = Math.random() * 4 + 2 + 'px';
+            particle.style.height = particle.style.width;
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 15 + 's';
+            particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+            particlesContainer.appendChild(particle);
+        }
+
+        // Scroll Animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in-up, .feature-card').forEach(el => {
+            observer.observe(el);
+        });
+      
+
+        // Wait for DOM to be fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+    
+    // Background slideshow
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    
+    if (slides.length > 0) {
+        slides[0].classList.add('active');
+        
+        function changeSlide() {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + 1) % slides.length;
+            slides[currentSlide].classList.add('active');
+        }
+        
+        setInterval(changeSlide, 5000);
+    }
+    
+    // Create animated particles
+    function createParticles() {
+        const container = document.getElementById('particlesContainer');
+        if (!container) return;
+        
+        const particleCount = 40;
+        
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            
+            const size = Math.random() * 5 + 2;
+            particle.style.width = size + 'px';
+            particle.style.height = size + 'px';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDuration = (Math.random() * 15 + 10) + 's';
+            particle.style.animationDelay = Math.random() * 5 + 's';
+            
+            container.appendChild(particle);
+        }
+    }
+    
+    // Create floating leaves
+    function createFloatingLeaves() {
+        const container = document.getElementById('floatingLeaves');
+        if (!container) return;
+        
+        const leafIcons = ['🍃', '🌿', '🌾'];
+        
+        setInterval(() => {
+            const leaf = document.createElement('div');
+            leaf.className = 'float-leaf';
+            leaf.textContent = leafIcons[Math.floor(Math.random() * leafIcons.length)];
+            leaf.style.top = Math.random() * 100 + '%';
+            leaf.style.fontSize = (Math.random() * 2 + 1) + 'rem';
+            leaf.style.animationDuration = (Math.random() * 10 + 15) + 's';
+            
+            container.appendChild(leaf);
+            
+            setTimeout(() => leaf.remove(), 25000);
+        }, 3000);
+    }
+    
+    // Parallax effect
+    document.addEventListener('mousemove', (e) => {
+        const orbs = document.querySelectorAll('.glow-orb');
+        const mouseX = e.clientX / window.innerWidth;
+        const mouseY = e.clientY / window.innerHeight;
+        
+        orbs.forEach((orb, index) => {
+            const speed = (index + 1) * 30;
+            const x = (mouseX - 0.5) * speed;
+            const y = (mouseY - 0.5) * speed;
+            orb.style.transform = `translate(${x}px, ${y}px)`;
+        });
+    
+        // Parallax for floating badge
+        const badge = document.querySelector('.floating-badge');
+        if (badge) {
+            const badgeX = (mouseX - 0.5) * 20;
+            const badgeY = (mouseY - 0.5) * 20;
+            badge.style.transform = `translate(${badgeX}px, ${badgeY}px)`;
+        }
+    });
+    
+    // Counter animation
+    function animateCounter(element) {
+        const targetStr = element.getAttribute('data-target');
+        if (!targetStr) return;
+        
+        const target = parseInt(targetStr.replace(/[^0-9]/g, ''));
+        const isPercentage = targetStr.includes('%');
+        const hasPlus = targetStr.includes('+');
+        const duration = 2000;
+        const increment = target / (duration / 16);
+        let current = 0;
+        
+        const timer = setInterval(() => {
+            current += increment;
+            if (current >= target) {
+                current = target;
+                clearInterval(timer);
+            }
+            
+            let displayValue = Math.floor(current);
+            if (isPercentage) displayValue += '%';
+            if (hasPlus) displayValue += '+';
+            
+            element.textContent = displayValue;
+        }, 16);
+    }
+    
+    // Intersection Observer for counters
+    const statsGrid = document.querySelector('.stats-grid');
+    if (statsGrid) {
+        const observerOptions = {
+            threshold: 0.5
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const counters = document.querySelectorAll('.stat-number');
+                    counters.forEach(counter => animateCounter(counter));
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+        
+        observer.observe(statsGrid);
+    }
+    
+    // Image gallery switching
+    const thumbnails = document.querySelectorAll('.thumbnail');
+    const mainImage = document.getElementById('mainImage');
+    const overlayTitle = document.querySelector('.overlay-title');
+    const overlayText = document.querySelector('.overlay-text');
+    
+    thumbnails.forEach(thumbnail => {
+        thumbnail.addEventListener('click', function() {
+            const newImage = this.getAttribute('data-image');
+            const newTitle = this.getAttribute('data-title');
+            const newText = this.getAttribute('data-text');
+            
+            if (!mainImage) return;
+            
+            mainImage.style.transition = 'all 0.3s ease';
+            mainImage.style.transform = 'scale(0.8)';
+            mainImage.style.opacity = '0';
+            
+            setTimeout(() => {
+                mainImage.src = newImage;
+                if (overlayTitle) overlayTitle.textContent = newTitle;
+                if (overlayText) overlayText.textContent = newText;
+                mainImage.style.transform = 'scale(1)';
+                mainImage.style.opacity = '1';
+            }, 300);
+            
+            // Update active thumbnail
+            thumbnails.forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+    
+    // Button interactions with ripple effect
+    document.querySelectorAll('.btn').forEach(button => {
+        button.style.position = 'relative';
+        button.style.overflow = 'hidden';
+        
+        button.addEventListener('click', function(e) {
+            const rect = this.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const ripple = document.createElement('span');
+            ripple.className = 'ripple-effect';
+            ripple.style.position = 'absolute';
+            ripple.style.left = x + 'px';
+            ripple.style.top = y + 'px';
+            ripple.style.width = '0';
+            ripple.style.height = '0';
+            ripple.style.borderRadius = '50%';
+            ripple.style.background = 'rgba(255, 255, 255, 0.5)';
+            ripple.style.transform = 'translate(-50%, -50%)';
+            ripple.style.animation = 'ripple 0.6s ease-out';
+            
+            this.appendChild(ripple);
+            
+            setTimeout(() => ripple.remove(), 600);
+        });
+    });
+    
+    // Scroll indicator
+    const scrollIndicator = document.querySelector('.scroll-indicator');
+    if (scrollIndicator) {
+        scrollIndicator.addEventListener('click', () => {
+            window.scrollBy({
+                top: window.innerHeight,
+                behavior: 'smooth'
+            });
+        });
+    }
+    
+    // Initialize effects
+    createParticles();
+    createFloatingLeaves();
+    
+    // Stat box hover effects
+    document.querySelectorAll('.stat-box').forEach(box => {
+        box.style.transition = 'transform 0.3s ease';
+        
+        box.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px) scale(1.05)';
+        });
+        
+        box.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+        });
+    });
+    
+    // Badge hover effects
+    document.querySelectorAll('.badge').forEach(badge => {
+        badge.style.transition = 'transform 0.3s ease';
+        
+        badge.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-3px) scale(1.05)';
+        });
+        
+        badge.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+        });
+    });
+    
+    // Icon wrapper click effect
+    const iconWrapper = document.querySelector('.icon-wrapper');
+    if (iconWrapper) {
+        iconWrapper.style.transition = 'transform 0.5s ease';
+        
+        iconWrapper.addEventListener('click', function() {
+            this.style.animation = 'none';
+            this.style.transform = 'scale(1.3) rotate(360deg)';
+            
+            setTimeout(() => {
+                this.style.animation = 'float-icon 3s ease-in-out infinite';
+                this.style.transform = 'scale(1) rotate(0deg)';
+            }, 500);
+        });
+    }
+    
+    // Add tilt effect to main image
+    const mainImageContainer = document.getElementById('mainImageContainer');
+    if (mainImageContainer) {
+        mainImageContainer.style.transition = 'transform 0.1s ease';
+        
+        mainImageContainer.addEventListener('mousemove', function(e) {
+            const rect = this.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            
+            const rotateX = (y - centerY) / 20;
+            const rotateY = (centerX - x) / 20;
+            
+            this.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+        });
+        
+        mainImageContainer.addEventListener('mouseleave', function() {
+            this.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
+        });
+    }
+    
+    // Smooth scroll for all anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            if (href === '#') return;
+            
+            e.preventDefault();
+            const target = document.querySelector(href);
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+    
+    // Add CSS animation for ripple effect
+    if (!document.querySelector('#ripple-animation-style')) {
+        const style = document.createElement('style');
+        style.id = 'ripple-animation-style';
+        style.textContent = `
+            @keyframes ripple {
+                to {
+                    width: 200px;
+                    height: 200px;
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+});
+
+// Optional: Add scroll-based animations
+window.addEventListener('scroll', () => {
+    const scrollIndicator = document.querySelector('.scroll-indicator');
+    if (scrollIndicator) {
+        if (window.scrollY > 100) {
+            scrollIndicator.style.opacity = '0';
+            scrollIndicator.style.pointerEvents = 'none';
+        } else {
+            scrollIndicator.style.opacity = '1';
+            scrollIndicator.style.pointerEvents = 'auto';
+        }
+    }
+});
+
+    </script>
+</body>
+</HTml>

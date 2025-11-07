@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - AgroSense</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .settings-card {
+            transition: all 0.3s ease;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .settings-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-color: #10b981;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            background-color: #cbd5e1;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .toggle-switch.active {
+            background-color: #10b981;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background-color: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .toggle-switch.active .toggle-slider {
+            transform: translateX(30px);
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+
+        .section-divider {
+            border-bottom: 2px solid #f3f4f6;
+            margin: 2rem 0;
+        }
+
+        .save-btn {
+            background: linear-gradient(135deg, #10b981, #059669);
+            transition: all 0.3s ease;
+        }
+
+        .save-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
+        }
+
+        .input-field {
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+        }
+
+        .danger-zone {
+            border: 2px solid #ef4444;
+            background: #fef2f2;
+        }
+
+        .success-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #10b981;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .success-message.show {
+            transform: translateX(0);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50">
+    <!-- Success Message -->
+    <div id="successMessage" class="success-message">
+        <i class="fas fa-check-circle mr-2"></i>
+        <span>Settings saved successfully!</span>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-40">
+        <div class="container mx-auto px-4 py-3 lg:py-4">
+            <div class="flex items-center justify-between">
+                <a href="index.html" class="flex items-center space-x-2">
+                    <i class="fas fa-leaf text-2xl lg:text-3xl text-green-600"></i>
+                    <span class="text-xl lg:text-2xl font-bold text-gray-800">AgroSense</span>
+                </a>
+                
+                <div class="flex items-center space-x-3 lg:space-x-4">
+                    <a href="index.html" class="text-gray-600 hover:text-green-600 transition">
+                        <i class="fas fa-home text-xl"></i>
+                    </a>
+                    <button class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">
+                        <i class="fas fa-save mr-2"></i>
+                        Save Changes
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="gradient-bg text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl lg:text-4xl font-bold mb-2">Settings</h1>
+                    <p class="text-green-100">Customize your AgroSense experience</p>
+                </div>
+                <div class="hidden md:block">
+                    <i class="fas fa-cog text-6xl opacity-20"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Settings Content -->
+    <section class="py-8 lg:py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid lg:grid-cols-4 gap-8">
+                <!-- Sidebar -->
+                <div class="lg:col-span-1">
+                    <div class="bg-white rounded-xl shadow-lg p-6 sticky top-24">
+                        <h3 class="text-lg font-bold text-gray-800 mb-4">Quick Navigation</h3>
+                        <ul class="space-y-2">
+                            <li>
+                                <a href="#profile" class="flex items-center gap-3 p-3 rounded-lg hover:bg-green-50 transition text-gray-700">
+                                    <i class="fas fa-user text-green-600"></i>
+                                    <span>Profile</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#account" class="flex items-center gap-3 p-3 rounded-lg hover:bg-green-50 transition text-gray-700">
+                                    <i class="fas fa-user-cog text-blue-600"></i>
+                                    <span>Account</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#notifications" class="flex items-center gap-3 p-3 rounded-lg hover:bg-green-50 transition text-gray-700">
+                                    <i class="fas fa-bell text-yellow-600"></i>
+                                    <span>Notifications</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#privacy" class="flex items-center gap-3 p-3 rounded-lg hover:bg-green-50 transition text-gray-700">
+                                    <i class="fas fa-shield-alt text-purple-600"></i>
+                                    <span>Privacy</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#preferences" class="flex items-center gap-3 p-3 rounded-lg hover:bg-green-50 transition text-gray-700">
+                                    <i class="fas fa-sliders-h text-indigo-600"></i>
+                                    <span>Preferences</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#danger" class="flex items-center gap-3 p-3 rounded-lg hover:bg-red-50 transition text-gray-700">
+                                    <i class="fas fa-exclamation-triangle text-red-600"></i>
+                                    <span>Danger Zone</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Main Content -->
+                <div class="lg:col-span-3 space-y-6">
+                    
+                    <!-- Profile Settings -->
+                    <div id="profile" class="settings-card bg-white rounded-xl shadow-lg p-6 lg:p-8 fade-in">
+                        <div class="flex items-center gap-3 mb-6">
+                            <i class="fas fa-user text-2xl text-green-600"></i>
+                            <h2 class="text-2xl font-bold text-gray-800">Profile Settings</h2>
+                        </div>
+                        
+                        <div class="flex flex-col md:flex-row gap-6 mb-6">
+                            <div class="flex-shrink-0">
+                                <div class="w-32 h-32 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center text-white text-4xl">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <button class="mt-4 w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition text-sm">
+                                    <i class="fas fa-camera mr-2"></i>Change Photo
+                                </button>
+                            </div>
+                            
+                            <div class="flex-grow space-y-4">
+                                <div>
+                                    <label class="block text-gray-700 font-medium mb-2">Full Name</label>
+                                    <input type="text" value="Rajesh Kumar" class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-green-500">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 font-medium mb-2">Email Address</label>
+                                    <input type="email" value="rajesh.kumar@example.com" class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-green-500">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 font-medium mb-2">Phone Number</label>
+                                    <input type="tel" value="+91 98765 43210" class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-green-500">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-gray-700 font-medium mb-2">Farm Name</label>
+                                <input type="text" value="Green Valley Farm" class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-green-500">
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 font-medium mb-2">Location</label>
+                                <input type="text" value="Punjab, India" class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-green-500">
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 font-medium mb-2">Farm Size (Acres)</label>
+                                <input type="number" value="25" class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-green-500">
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 font-medium mb-2">Primary Crop</label>
+                                <select class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-green-500">
+                                    <option>Wheat</option>
+                                    <option>Rice</option>
+                                    <option>Cotton</option>
+                                    <option>Vegetables</option>
+                                    <option>Fruits</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Account Settings -->
+                    <div id="account" class="settings-card bg-white rounded-xl shadow-lg p-6 lg:p-8 fade-in">
+                        <div class="flex items-center gap-3 mb-6">
+                            <i class="fas fa-user-cog text-2xl text-blue-600"></i>
+                            <h2 class="text-2xl font-bold text-gray-800">Account Settings</h2>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            <div>
+                                <h3 class="font-semibold text-gray-800 mb-4">Change Password</h3>
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="block text-gray-700 mb-2">Current Password</label>
+                                        <input type="password" class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-green-500">
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-700 mb-2">New Password</label>
+                                        <input type="password" class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-green-500">
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-700 mb-2">Confirm New Password</label>
+                                        <input type="password" class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-green-500">
+                                    </div>
+                                    <button class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">
+                                        Update Password
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="section-divider"></div>
+                            
+                            <div>
+                                <h3 class="font-semibold text-gray-800 mb-4">Two-Factor Authentication</h3>
+                                <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                                    <div>
+                                        <p class="font-medium text-gray-800">Enable 2FA</p>
+                                        <p class="text-sm text-gray-600">Add an extra layer of security</p>
+                                    </div>
+                                    <div class="toggle-switch" onclick="this.classList.toggle('active')">
+                                        <div class="toggle-slider"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Notification Settings -->
+                    <div id="notifications" class="settings-card bg-white rounded-xl shadow-lg p-6 lg:p-8 fade-in">
+                        <div class="flex items-center gap-3 mb-6">
+                            <i class="fas fa-bell text-2xl text-yellow-600"></i>
+                            <h2 class="text-2xl font-bold text-gray-800">Notification Settings</h2>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                                <div>
+                                    <p class="font-medium text-gray-800">Weather Alerts</p>
+                                    <p class="text-sm text-gray-600">Get notified about weather changes</p>
+                                </div>
+                                <div class="toggle-switch active" onclick="this.classList.toggle('active')">
+                                    <div class="toggle-slider"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                                <div>
+                                    <p class="font-medium text-gray-800">Pest Warnings</p>
+                                    <p class="text-sm text-gray-600">Alerts for potential pest threats</p>
+                                </div>
+                                <div class="toggle-switch active" onclick="this.classList.toggle('active')">
+                                    <div class="toggle-slider"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                                <div>
+                                    <p class="font-medium text-gray-800">Market Price Updates</p>
+                                    <p class="text-sm text-gray-600">Daily market price notifications</p>
+                                </div>
+                                <div class="toggle-switch" onclick="this.classList.toggle('active')">
+                                    <div class="toggle-slider"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                                <div>
+                                    <p class="font-medium text-gray-800">Email Notifications</p>
+                                    <p class="text-sm text-gray-600">Receive updates via email</p>
+                                </div>
+                                <div class="toggle-switch active" onclick="this.classList.toggle('active')">
+                                    <div class="toggle-slider"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                                <div>
+                                    <p class="font-medium text-gray-800">SMS Notifications</p>
+                                    <p class="text-sm text-gray-600">Get alerts via SMS</p>
+                                </div>
+                                <div class="toggle-switch" onclick="this.classList.toggle('active')">
+                                    <div class="toggle-slider"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Privacy Settings -->
+                    <div id="privacy" class="settings-card bg-white rounded-xl shadow-lg p-6 lg:p-8 fade-in">
+                        <div class="flex items-center gap-3 mb-6">
+                            <i class="fas fa-shield-alt text-2xl text-purple-600"></i>
+                            <h2 class="text-2xl font-bold text-gray-800">Privacy Settings</h2>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                                <div>
+                                    <p class="font-medium text-gray-800">Profile Visibility</p>
+                                    <p class="text-sm text-gray-600">Make your profile visible to others</p>
+                                </div>
+                                <div class="toggle-switch active" onclick="this.classList.toggle('active')">
+                                    <div class="toggle-slider"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                                <div>
+                                    <p class="font-medium text-gray-800">Data Collection</p>
+                                    <p class="text-sm text-gray-600">Allow anonymous data collection for improvements</p>
+                                </div>
+                                <div class="toggle-switch active" onclick="this.classList.toggle('active')">
+                                    <div class="toggle-slider"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                                <div>
+                                    <p class="font-medium text-gray-800">Location Tracking</p>
+                                    <p class="text-sm text-gray-600">Enable location-based features</p>
+                                </div>
+                                <div class="toggle-switch active" onclick="this.classList.toggle('active')">
+                                    <div class="toggle-slider"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Preferences -->
+                    <div id="preferences" class="settings-card bg-white rounded-xl shadow-lg p-6 lg:p-8 fade-in">
+                        <div class="flex items-center gap-3 mb-6">
+                            <i class="fas fa-sliders-h text-2xl text-indigo-600"></i>
+                            <h2 class="text-2xl font-bold text-gray-800">Preferences</h2>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            <div>
+                                <label class="block text-gray-700 font-medium mb-2">Language</label>
+                                <select class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-green-500">
+                                    <option>English</option>
+                                    <option>हिंदी (Hindi)</option>
+                                    <option>ਪੰਜਾਬੀ (Punjabi)</option>
+                                    <option>ಕನ್ನಡ (Kannada)</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-gray-700 font-medium mb-2">Time Zone</label>
+                                <select class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-green-500">
+                                    <option>IST (Indian Standard Time)</option>
+                                    <option>GMT</option>
+                                    <option>EST</option>
+                                    <option>PST</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-gray-700 font-medium mb-2">Temperature Unit</label>
+                                <div class="flex gap-4">
+                                    <label class="flex items-center">
+                                        <input type="radio" name="temp" checked class="mr-2">
+                                        <span>Celsius (°C)</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="radio" name="temp" class="mr-2">
+                                        <span>Fahrenheit (°F)</span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                                <div>
+                                    <p class="font-medium text-gray-800">Dark Mode</p>
+                                    <p class="text-sm text-gray-600">Enable dark theme</p>
+                                </div>
+                                <div class="toggle-switch" onclick="this.classList.toggle('active')">
+                                    <div class="toggle-slider"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Danger Zone -->
+                    <div id="danger" class="settings-card danger-zone rounded-xl p-6 lg:p-8 fade-in">
+                        <div class="flex items-center gap-3 mb-6">
+                            <i class="fas fa-exclamation-triangle text-2xl text-red-600"></i>
+                            <h2 class="text-2xl font-bold text-red-600">Danger Zone</h2>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between p-4 bg-white rounded-lg">
+                                <div>
+                                    <p class="font-medium text-gray-800">Export Data</p>
+                                    <p class="text-sm text-gray-600">Download all your farm data</p>
+                                </div>
+                                <button class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition">
+                                    <i class="fas fa-download mr-2"></i>Export
+                                </button>
+                            </div>
+                            
+                            <div class="flex items-center justify-between p-4 bg-white rounded-lg">
+                                <div>
+                                    <p class="font-medium text-gray-800">Deactivate Account</p>
+                                    <p class="text-sm text-gray-600">Temporarily disable your account</p>
+                                </div>
+                                <button class="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition">
+                                    Deactivate
+                                </button>
+                            </div>
+                            
+                            <div class="flex items-center justify-between p-4 bg-white rounded-lg">
+                                <div>
+                                    <p class="font-medium text-gray-800">Delete Account</p>
+                                    <p class="text-sm text-gray-600">Permanently delete your account and data</p>
+                                </div>
+                                <button class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition">
+                                    Delete
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Save Button -->
+                    <div class="flex justify-end gap-4">
+                        <a href="index.html" class="px-8 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-semibold">
+                            Cancel
+                        </a>
+                        <button onclick="saveSettings()" class="save-btn px-8 py-3 text-white rounded-lg font-semibold">
+                            <i class="fas fa-save mr-2"></i>Save All Changes
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-8 mt-12">
+        <div class="container mx-auto px-4 text-center">
+            <div class="flex items-center justify-center space-x-2 mb-4">
+                <i class="fas fa-leaf text-2xl text-green-500"></i>
+                <span class="text-xl font-bold">AgroSense</span>
+            </div>
+            <p class="text-gray-400">&copy; 2024 AgroSense. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Save settings function
+        function saveSettings() {
+            const successMsg = document.getElementById('successMessage');
+            successMsg.classList.add('show');
+            
+            setTimeout(() => {
+                successMsg.classList.remove('show');
+            }, 3000);
+        }
+
+        // Add fade-in animation on scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            observer.observe(el);
+        });
+
+        // Active sidebar link based on scroll
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('.settings-card');
+            const navLinks = document.querySelectorAll('.lg\\:col-span-1 a');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (scrollY >= sectionTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('bg-green-50');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('bg-green-50');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

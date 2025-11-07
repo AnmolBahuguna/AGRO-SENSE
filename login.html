@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login / Sign Up - AgroSense</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in { animation: fadeIn 0.6s ease-out; }
+        .input-group input:focus, .input-group select:focus {
+            transform: scale(1.01);
+            transition: all 0.2s;
+        }
+        .btn-hover {
+            transition: all 0.3s ease;
+        }
+        .btn-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(34, 197, 94, 0.3);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-lg">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <a href="index.html" class="flex items-center space-x-2 hover:scale-105 transition">
+                    <i class="fas fa-leaf text-2xl"></i>
+                    <span class="text-2xl font-bold">AgroSense</span>
+                </a>
+                <div class="flex items-center space-x-4">
+                    <!-- Language Switcher -->
+                    <div class="relative group">
+                        <button class="flex items-center space-x-2 bg-white/20 px-3 py-2 rounded-lg hover:bg-white/30 transition">
+                            <i class="fas fa-language text-lg"></i>
+                            <span id="currentLang">English</span>
+                            <i class="fas fa-chevron-down text-xs"></i>
+                        </button>
+                        <div class="absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                            <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-green-50 rounded-t-lg" onclick="changeLang('en'); return false;">
+                                <i class=""></i>English
+                            </a>
+                            <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-green-50" onclick="changeLang('hi'); return false;">
+                                <i class=""></i>हिंदी
+                            </a>
+                            <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-green-50" onclick="changeLang('kn'); return false;">
+                                <i class=""></i>ಕನ್ನಡ
+                            </a>
+                            <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-green-50 rounded-b-lg" onclick="changeLang('pa'); return false;">
+                                <i class=""></i>ਪੰਜਾਬੀ
+                            </a>
+                        </div>
+                    </div>
+                    <a href="index.html" class="hover:text-green-200 transition">
+                        <i class="fas fa-home mr-2"></i><span data-translate="nav-home">Home</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-12">
+        <div class="max-w-md mx-auto">
+            <div class="bg-white rounded-2xl shadow-2xl p-8 fade-in">
+                <!-- Toggle Buttons -->
+                <div class="flex bg-gray-100 rounded-xl p-1 mb-8">
+                    <button 
+                        id="loginTab" 
+                        class="flex-1 py-3 rounded-lg font-semibold transition bg-white text-green-600 shadow-md"
+                        onclick="showLogin()"
+                    >
+                        <i class="fas fa-sign-in-alt mr-2"></i><span data-translate="tab-login">Login</span>
+                    </button>
+                    <button 
+                        id="signupTab" 
+                        class="flex-1 py-3 rounded-lg font-semibold transition text-gray-600 hover:text-green-600"
+                        onclick="showSignup()"
+                    >
+                        <i class="fas fa-user-plus mr-2"></i><span data-translate="tab-signup">Sign Up</span>
+                    </button>
+                </div>
+
+                <!-- Login Form -->
+                <div id="loginForm">
+                    <div class="text-center mb-6">
+                        <div class="bg-gradient-to-br from-green-400 to-emerald-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                            <i class="fas fa-sign-in-alt text-white text-2xl"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-800" data-translate="login-title">Welcome Back!</h2>
+                        <p class="text-gray-600 mt-2" data-translate="login-subtitle">Login to your account</p>
+                    </div>
+
+                    <form id="loginFormElement" class="space-y-5">
+                        <div class="input-group">
+                            <label class="block text-gray-700 font-semibold mb-2">
+                                <i class="fas fa-envelope mr-2 text-green-600"></i><span data-translate="label-email">Email</span>
+                            </label>
+                            <input 
+                                type="email" 
+                                id="loginEmail"
+                                class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
+                                data-translate-placeholder="placeholder-email"
+                                placeholder="your@email.com"
+                                required
+                            >
+                        </div>
+
+                        <div class="input-group">
+                            <label class="block text-gray-700 font-semibold mb-2">
+                                <i class="fas fa-lock mr-2 text-green-600"></i><span data-translate="label-password">Password</span>
+                            </label>
+                            <input 
+                                type="password" 
+                                id="loginPassword"
+                                class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
+                                data-translate-placeholder="placeholder-password"
+                                placeholder="Enter your password"
+                                required
+                            >
+                        </div>
+
+                        <div class="flex items-center justify-between text-sm">
+                            <label class="flex items-center cursor-pointer">
+                                <input type="checkbox" class="w-4 h-4 text-green-600 rounded mr-2">
+                                <span class="text-gray-700" data-translate="remember-me">Remember me</span>
+                            </label>
+                            <a href="#" class="text-green-600 hover:text-green-700 font-semibold" data-translate="forgot-password">Forgot Password?</a>
+                        </div>
+
+                        <button 
+                            type="submit"
+                            class="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white py-3 rounded-xl font-semibold btn-hover"
+                        >
+                            <i class="fas fa-sign-in-alt mr-2"></i><span data-translate="btn-login">Login</span>
+                        </button>
+                    </form>
+
+                    <div class="mt-6">
+                        <div class="flex items-center my-6">
+                            <div class="flex-1 border-t border-gray-300"></div>
+                            <span class="px-4 text-gray-500 text-sm" data-translate="or-text">OR</span>
+                            <div class="flex-1 border-t border-gray-300"></div>
+                        </div>
+
+                        <button class="w-full bg-white border-2 border-gray-300 text-gray-700 py-3 rounded-xl font-semibold hover:bg-gray-50 hover:border-green-500 transition flex items-center justify-center">
+                            <i class="fab fa-google mr-2 text-red-500"></i><span data-translate="google-login">Continue with Google</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Signup Form -->
+                <div id="signupForm" class="hidden">
+                    <div class="text-center mb-6">
+                        <div class="bg-gradient-to-br from-green-400 to-emerald-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                            <i class="fas fa-user-plus text-white text-2xl"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-800" data-translate="signup-title">Create Account</h2>
+                        <p class="text-gray-600 mt-2" data-translate="signup-subtitle">Join AgroSense today! 🌾</p>
+                    </div>
+
+                    <form id="signupFormElement" class="space-y-4">
+                        <div class="input-group">
+                            <label class="block text-gray-700 font-semibold mb-2">
+                                <i class="fas fa-user mr-2 text-green-600"></i><span data-translate="label-name">Full Name</span>
+                            </label>
+                            <input 
+                                type="text" 
+                                id="signupName"
+                                class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
+                                data-translate-placeholder="placeholder-name"
+                                placeholder="Your full name"
+                                required
+                            >
+                        </div>
+
+                        <div class="input-group">
+                            <label class="block text-gray-700 font-semibold mb-2">
+                                <i class="fas fa-envelope mr-2 text-green-600"></i><span data-translate="label-email">Email</span>
+                            </label>
+                            <input 
+                                type="email" 
+                                id="signupEmail"
+                                class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
+                                data-translate-placeholder="placeholder-email"
+                                placeholder="your@email.com"
+                                required
+                            >
+                        </div>
+
+                        <div class="input-group">
+                            <label class="block text-gray-700 font-semibold mb-2">
+                                <i class="fas fa-phone mr-2 text-green-600"></i><span data-translate="label-phone">Phone</span>
+                            </label>
+                            <input 
+                                type="tel" 
+                                id="signupPhone"
+                                class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
+                                data-translate-placeholder="placeholder-phone"
+                                placeholder="+91 9876543210"
+                                pattern="[0-9]{10}"
+                                required
+                            >
+                        </div>
+
+                        <div class="input-group">
+                            <label class="block text-gray-700 font-semibold mb-2">
+                                <i class="fas fa-lock mr-2 text-green-600"></i><span data-translate="label-password">Password</span>
+                            </label>
+                            <input 
+                                type="password" 
+                                id="signupPassword"
+                                class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
+                                data-translate-placeholder="password-min"
+                                placeholder="Min 6 characters"
+                                minlength="6"
+                                required
+                            >
+                        </div>
+
+                        <div class="bg-yellow-50 border-2 border-yellow-200 p-3 rounded-xl">
+                            <label class="flex items-start cursor-pointer">
+                                <input type="checkbox" class="w-4 h-4 text-green-600 rounded mt-1 mr-3" required>
+                                <span class="text-xs text-gray-700">
+                                    <span data-translate="terms-text">I agree to the</span> <a href="#" class="text-green-600 hover:text-green-700 font-semibold underline" data-translate="terms-link">Terms & Conditions</a>
+                                </span>
+                            </label>
+                        </div>
+
+                        <button 
+                            type="submit"
+                            class="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white py-3 rounded-xl font-semibold btn-hover"
+                        >
+                            <i class="fas fa-user-plus mr-2"></i><span data-translate="btn-signup">Create Account</span>
+                        </button>
+                    </form>
+
+                    <div class="mt-6">
+                        <div class="flex items-center my-6">
+                            <div class="flex-1 border-t border-gray-300"></div>
+                            <span class="px-4 text-gray-500 text-sm" data-translate="or-text">OR</span>
+                            <div class="flex-1 border-t border-gray-300"></div>
+                        </div>
+
+                        <button class="w-full bg-white border-2 border-gray-300 text-gray-700 py-3 rounded-xl font-semibold hover:bg-gray-50 hover:border-green-500 transition flex items-center justify-center">
+                            <i class="fab fa-google mr-2 text-red-500"></i><span data-translate="google-signup">Sign up with Google</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trust Badges -->
+            <div class="mt-8 text-center">
+                <div class="flex flex-wrap justify-center items-center gap-4 text-gray-600 text-sm">
+                    <div class="flex items-center">
+                        <i class="fas fa-shield-alt text-green-600 mr-2"></i>
+                        <span data-translate="secure">Secure</span>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-users text-green-600 mr-2"></i>
+                        <span data-translate="farmers">10,000+ Farmers</span>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-star text-yellow-500 mr-2"></i>
+                        <span data-translate="rating">4.8 Rating</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        // Language translations
+const translations = {
+    en: {
+        'nav-home': 'Home',
+        'tab-login': 'Login',
+        'tab-signup': 'Sign Up',
+        'login-title': 'Welcome Back!',
+        'login-subtitle': 'Login to your account',
+        'label-email': 'Email',
+        'label-password': 'Password',
+        'label-name': 'Full Name',
+        'label-phone': 'Phone',
+        'placeholder-email': 'your@email.com',
+        'placeholder-password': 'Enter your password',
+        'placeholder-name': 'Your full name',
+        'placeholder-phone': '+91 9876543210',
+        'remember-me': 'Remember me',
+        'forgot-password': 'Forgot Password?',
+        'btn-login': 'Login',
+        'btn-signup': 'Create Account',
+        'or-text': 'OR',
+        'google-login': 'Continue with Google',
+        'google-signup': 'Sign up with Google',
+        'signup-title': 'Create Account',
+        'signup-subtitle': 'Join AgroSense today! 🌾',
+        'terms-text': 'I agree to the',
+        'terms-link': 'Terms & Conditions',
+        'secure': 'Secure',
+        'farmers': '10,000+ Farmers',
+        'rating': '4.8 Rating',
+        'password-min': 'Min 6 characters',
+        'success-login': '✅ Login successful! Welcome back!',
+        'success-signup': '✅ Account created successfully! Welcome to AgroSense!',
+        'error-password': '❌ Password must be at least 6 characters!'
+    },
+    hi: {
+        'nav-home': 'होम',
+        'tab-login': 'लॉगिन',
+        'tab-signup': 'साइन अप',
+        'login-title': 'वापसी पर स्वागत है!',
+        'login-subtitle': 'अपने खाते में लॉगिन करें',
+        'label-email': 'ईमेल',
+        'label-password': 'पासवर्ड',
+        'label-name': 'पूरा नाम',
+        'label-phone': 'फ़ोन',
+        'placeholder-email': 'आपका@ईमेल.com',
+        'placeholder-password': 'अपना पासवर्ड दर्ज करें',
+        'placeholder-name': 'आपका पूरा नाम',
+        'placeholder-phone': '+91 9876543210',
+        'remember-me': 'मुझे याद रखें',
+        'forgot-password': 'पासवर्ड भूल गए?',
+        'btn-login': 'लॉगिन करें',
+        'btn-signup': 'खाता बनाएं',
+        'or-text': 'या',
+        'google-login': 'Google से जारी रखें',
+        'google-signup': 'Google से साइन अप करें',
+        'signup-title': 'खाता बनाएं',
+        'signup-subtitle': 'आज ही AgroSense से जुड़ें! 🌾',
+        'terms-text': 'मैं सहमत हूं',
+        'terms-link': 'नियम और शर्तें',
+        'secure': 'सुरक्षित',
+        'farmers': '10,000+ किसान',
+        'rating': '4.8 रेटिंग',
+        'password-min': 'न्यूनतम 6 अक्षर',
+        'success-login': '✅ लॉगिन सफल! वापसी पर स्वागत है!',
+        'success-signup': '✅ खाता सफलतापूर्वक बनाया गया! AgroSense में आपका स्वागत है!',
+        'error-password': '❌ पासवर्ड कम से कम 6 अक्षर का होना चाहिए!'
+    },
+    kn: {
+        'nav-home': 'ಮುಖಪುಟ',
+        'tab-login': 'ಲಾಗಿನ್',
+        'tab-signup': 'ಸೈನ್ ಅಪ್',
+        'login-title': 'ಮರಳಿ ಸ್ವಾಗತ!',
+        'login-subtitle': 'ನಿಮ್ಮ ಖಾತೆಗೆ ಲಾಗಿನ್ ಮಾಡಿ',
+        'label-email': 'ಇಮೇಲ್',
+        'label-password': 'ಪಾಸ್‌ವರ್ಡ್',
+        'label-name': 'ಪೂರ್ಣ ಹೆಸರು',
+        'label-phone': 'ಫೋನ್',
+        'placeholder-email': 'your@email.com',
+        'placeholder-password': 'ನಿಮ್ಮ ಪಾಸ್‌ವರ್ಡ್ ನಮೂದಿಸಿ',
+        'placeholder-name': 'ನಿಮ್ಮ ಪೂರ್ಣ ಹೆಸರು',
+        'placeholder-phone': '+91 9876543210',
+        'remember-me': 'ನನ್ನನ್ನು ನೆನಪಿಡಿ',
+        'forgot-password': 'ಪಾಸ್‌ವರ್ಡ್ ಮರೆತಿರುವಿರಾ?',
+        'btn-login': 'ಲಾಗಿನ್ ಮಾಡಿ',
+        'btn-signup': 'ಖಾತೆ ರಚಿಸಿ',
+        'or-text': 'ಅಥವಾ',
+        'google-login': 'Google ನೊಂದಿಗೆ ಮುಂದುವರಿಸಿ',
+        'google-signup': 'Google ನೊಂದಿಗೆ ಸೈನ್ ಅಪ್ ಮಾಡಿ',
+        'signup-title': 'ಖಾತೆ ರಚಿಸಿ',
+        'signup-subtitle': 'ಇಂದು AgroSense ಸೇರಿ! 🌾',
+        'terms-text': 'ನಾನು ಒಪ್ಪುತ್ತೇನೆ',
+        'terms-link': 'ನಿಯಮಗಳು ಮತ್ತು ಷರತ್ತುಗಳು',
+        'secure': 'ಸುರಕ್ಷಿತ',
+        'farmers': '10,000+ ರೈತರು',
+        'rating': '4.8 ರೇಟಿಂಗ್',
+        'password-min': 'ಕನಿಷ್ಠ 6 ಅಕ್ಷರಗಳು',
+        'success-login': '✅ ಲಾಗಿನ್ ಯಶಸ್ವಿಯಾಗಿದೆ! ಮರಳಿ ಸ್ವಾಗತ!',
+        'success-signup': '✅ ಖಾತೆ ಯಶಸ್ವಿಯಾಗಿ ರಚಿಸಲಾಗಿದೆ! AgroSense ಗೆ ಸ್ವಾಗತ!',
+        'error-password': '❌ ಪಾಸ್‌ವರ್ಡ್ ಕನಿಷ್ಠ 6 ಅಕ್ಷರಗಳಾಗಿರಬೇಕು!'
+    },
+    pa: {
+        'nav-home': 'ਘਰ',
+        'tab-login': 'ਲਾਗਇਨ',
+        'tab-signup': 'ਸਾਈਨ ਅੱਪ',
+        'login-title': 'ਵਾਪਸੀ ਤੇ ਸੁਆਗਤ ਹੈ!',
+        'login-subtitle': 'ਆਪਣੇ ਖਾਤੇ ਵਿੱਚ ਲਾਗਇਨ ਕਰੋ',
+        'label-email': 'ਈਮੇਲ',
+        'label-password': 'ਪਾਸਵਰਡ',
+        'label-name': 'ਪੂਰਾ ਨਾਮ',
+        'label-phone': 'ਫੋਨ',
+        'placeholder-email': 'ਤੁਹਾਡਾ@ਈਮੇਲ.com',
+        'placeholder-password': 'ਆਪਣਾ ਪਾਸਵਰਡ ਦਾਖਲ ਕਰੋ',
+        'placeholder-name': 'ਤੁਹਾਡਾ ਪੂਰਾ ਨਾਮ',
+        'placeholder-phone': '+91 9876543210',
+        'remember-me': 'ਮੈਨੂੰ ਯਾਦ ਰੱਖੋ',
+        'forgot-password': 'ਪਾਸਵਰਡ ਭੁੱਲ ਗਏ?',
+        'btn-login': 'ਲਾਗਇਨ ਕਰੋ',
+        'btn-signup': 'ਖਾਤਾ ਬਣਾਓ',
+        'or-text': 'ਜਾਂ',
+        'google-login': 'Google ਨਾਲ ਜਾਰੀ ਰੱਖੋ',
+        'google-signup': 'Google ਨਾਲ ਸਾਈਨ ਅੱਪ ਕਰੋ',
+        'signup-title': 'ਖਾਤਾ ਬਣਾਓ',
+        'signup-subtitle': 'ਅੱਜ ਹੀ AgroSense ਨਾਲ ਜੁੜੋ! 🌾',
+        'terms-text': 'ਮੈਂ ਸਹਿਮਤ ਹਾਂ',
+        'terms-link': 'ਨਿਯਮ ਅਤੇ ਸ਼ਰਤਾਂ',
+        'secure': 'ਸੁਰੱਖਿਅਤ',
+        'farmers': '10,000+ ਕਿਸਾਨ',
+        'rating': '4.8 ਰੇਟਿੰਗ',
+        'password-min': 'ਘੱਟੋ-ਘੱਟ 6 ਅੱਖਰ',
+        'success-login': '✅ ਲਾਗਇਨ ਸਫਲ! ਵਾਪਸੀ ਤੇ ਸੁਆਗਤ ਹੈ!',
+        'success-signup': '✅ ਖਾਤਾ ਸਫਲਤਾਪੂਰਵਕ ਬਣਾਇਆ ਗਿਆ! AgroSense ਵਿੱਚ ਤੁਹਾਡਾ ਸੁਆਗਤ ਹੈ!',
+        'error-password': '❌ ਪਾਸਵਰਡ ਘੱਟੋ-ਘੱਟ 6 ਅੱਖਰਾਂ ਦਾ ਹੋਣਾ ਚਾਹੀਦਾ ਹੈ!'
+    }
+};
+
+let currentLanguage = 'en';
+
+// Language switcher function
+function changeLang(lang) {
+    currentLanguage = lang;
+    const langNames = {
+        'en': 'English',
+        'hi': 'हिंदी',
+        'kn': 'ಕನ್ನಡ',
+        'pa': 'ਪੰਜਾਬੀ'
+    };
+    
+    document.getElementById('currentLang').textContent = langNames[lang];
+    
+    // Update all translatable elements
+    document.querySelectorAll('[data-translate]').forEach(element => {
+        const key = element.getAttribute('data-translate');
+        if (translations[lang] && translations[lang][key]) {
+            element.textContent = translations[lang][key];
+        }
+    });
+
+    // Update placeholders
+    document.querySelectorAll('[data-translate-placeholder]').forEach(element => {
+        const key = element.getAttribute('data-translate-placeholder');
+        if (translations[lang] && translations[lang][key]) {
+            element.placeholder = translations[lang][key];
+        }
+    });
+}
+
+// Show Login Form
+function showLogin() {
+    document.getElementById('loginForm').classList.remove('hidden');
+    document.getElementById('signupForm').classList.add('hidden');
+    
+    // Update tab styles
+    document.getElementById('loginTab').classList.add('bg-white', 'text-green-600', 'shadow-md');
+    document.getElementById('loginTab').classList.remove('text-gray-600');
+    
+    document.getElementById('signupTab').classList.remove('bg-white', 'text-green-600', 'shadow-md');
+    document.getElementById('signupTab').classList.add('text-gray-600');
+}
+
+// Show Signup Form
+function showSignup() {
+    document.getElementById('signupForm').classList.remove('hidden');
+    document.getElementById('loginForm').classList.add('hidden');
+    
+    // Update tab styles
+    document.getElementById('signupTab').classList.add('bg-white', 'text-green-600', 'shadow-md');
+    document.getElementById('signupTab').classList.remove('text-gray-600');
+    
+    document.getElementById('loginTab').classList.remove('bg-white', 'text-green-600', 'shadow-md');
+    document.getElementById('loginTab').classList.add('text-gray-600');
+}
+
+// Display notification message
+function showNotification(message, type = 'success') {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `fixed top-4 right-4 px-6 py-4 rounded-lg shadow-2xl z-50 transform transition-all duration-500 ${
+        type === 'success' ? 'bg-green-500' : 'bg-red-500'
+    } text-white font-semibold`;
+    notification.textContent = message;
+    
+    document.body.appendChild(notification);
+    
+    // Animate in
+    setTimeout(() => {
+        notification.style.transform = 'translateX(0)';
+        notification.style.opacity = '1';
+    }, 100);
+    
+    // Remove after 3 seconds
+    setTimeout(() => {
+        notification.style.transform = 'translateX(400px)';
+        notification.style.opacity = '0';
+        setTimeout(() => {
+            document.body.removeChild(notification);
+        }, 500);
+    }, 3000);
+}
+
+// Handle Login Form Submission
+document.getElementById('loginFormElement').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+    
+    // Basic validation
+    if (password.length < 6) {
+        showNotification(translations[currentLanguage]['error-password'], 'error');
+        return;
+    }
+    
+    // Simulate login (in real app, this would be an API call)
+    console.log('Login attempt:', { email, password });
+    
+    // Show success message
+    showNotification(translations[currentLanguage]['success-login']);
+    
+    // Redirect to dashboard after 1.5 seconds
+    setTimeout(() => {
+        window.location.href = 'index.html'; // Or dashboard.html
+    }, 1500);
+});
+
+// Handle Signup Form Submission
+document.getElementById('signupFormElement').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const name = document.getElementById('signupName').value;
+    const email = document.getElementById('signupEmail').value;
+    const phone = document.getElementById('signupPhone').value;
+    const password = document.getElementById('signupPassword').value;
+    
+    // Basic validation
+    if (password.length < 6) {
+        showNotification(translations[currentLanguage]['error-password'], 'error');
+        return;
+    }
+    
+    // Simulate signup (in real app, this would be an API call)
+    console.log('Signup attempt:', { name, email, phone, password });
+    
+    // Show success message
+    showNotification(translations[currentLanguage]['success-signup']);
+    
+    // Redirect to dashboard after 1.5 seconds
+    setTimeout(() => {
+        window.location.href = 'index.html'; // Or dashboard.html
+    }, 1500);
+});
+
+// Initialize the page
+document.addEventListener('DOMContentLoaded', function() {
+    // Set default language
+    changeLang('en');
+    
+    // Show login form by default
+    showLogin();
+});
+    </script>
+</body>
+</html>

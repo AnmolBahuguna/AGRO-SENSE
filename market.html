@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Government Schemes & Market Updates | AgroSense</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideOut {
+      from { opacity: 1; transform: translateX(0); }
+      to { opacity: 0; transform: translateX(100px); }
+    }
+    .card-animate {
+      animation: slideIn 0.5s ease-out forwards;
+      opacity: 0;
+    }
+    .spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #10b981;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-b from-green-50 to-white min-h-screen">
+
+  <!-- Header -->
+  <header class="bg-gradient-to-r from-green-600 to-green-700 text-white shadow-xl sticky top-0 z-50">
+    <div class="container mx-auto px-4 py-5">
+      <div class="flex justify-between items-center">
+        <div class="flex items-center space-x-3">
+          <a href="index.html" class="flex items-center space-x-2 hover:opacity-80 transition">
+            <span class="text-3xl">🌾</span>
+            <h1 class="text-2xl font-bold">AgroSense</h1>
+          </a>
+          <span class="hidden sm:inline text-green-200 text-sm">/ Schemes & Market</span>
+        </div>
+        
+        <div class="flex items-center gap-3">
+          <select id="languageSelector" class="bg-green-500 text-white px-4 py-2 rounded-lg border border-green-400 focus:outline-none focus:ring-2 focus:ring-green-300 cursor-pointer font-semibold">
+            <option value="en">🌍 English</option>
+            <option value="hi">🇮🇳 हिन्दी</option>
+            <option value="pa">🇮🇳 ਪੰਜਾਬੀ</option>
+          </select>
+
+          <button onclick="toggleVoiceMode()" class="hidden sm:flex bg-green-500 hover:bg-green-400 text-white px-4 py-2 rounded-lg font-semibold transition items-center gap-2">
+            <span id="voiceIcon">🔊</span>
+          </button>
+
+          <button onclick="toggleSidebar()" class="bg-green-500 hover:bg-green-400 text-white px-4 py-2 rounded-lg font-semibold transition">
+            <i class="fas fa-bars"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Sidebar -->
+  <div id="sidebar" class="fixed left-0 top-0 h-full w-72 bg-white shadow-2xl z-50 transform -translate-x-full transition-transform duration-300">
+    <div class="p-6">
+      <div class="flex items-center justify-between mb-8">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">🌾</span>
+          <h2 class="text-xl font-bold text-green-700">AgroSense</h2>
+        </div>
+        <button onclick="toggleSidebar()" class="text-gray-500 hover:text-gray-700">
+          <i class="fas fa-times text-xl"></i>
+        </button>
+      </div>
+
+      <nav class="space-y-2">
+        <a href="index.html" class="flex items-center gap-3 p-3 rounded-lg text-gray-700 hover:bg-green-50 hover:text-green-600 transition">
+          <i class="fas fa-home text-green-600"></i>
+          <span class="font-medium">Home</span>
+        </a>
+        <a href="weather.html" class="flex items-center gap-3 p-3 rounded-lg text-gray-700 hover:bg-green-50 hover:text-green-600 transition">
+          <i class="fas fa-cloud-sun text-blue-500"></i>
+          <span class="font-medium">Weather</span>
+        </a>
+        <a href="#market" onclick="scrollToMarket(event)" class="flex items-center gap-3 p-3 rounded-lg text-gray-700 hover:bg-green-50 hover:text-green-600 transition">
+          <i class="fas fa-chart-line text-yellow-600"></i>
+          <span class="font-medium">Market Prices</span>
+        </a>
+        <a href="#schemes" onclick="scrollToSchemes(event)" class="flex items-center gap-3 p-3 rounded-lg text-gray-700 hover:bg-green-50 hover:text-green-600 transition">
+          <i class="fas fa-file-alt text-purple-600"></i>
+          <span class="font-medium">Government Schemes</span>
+        </a>
+        <a href="chatbot.html" class="flex items-center gap-3 p-3 rounded-lg text-gray-700 hover:bg-green-50 hover:text-green-600 transition">
+          <i class="fas fa-robot text-indigo-600"></i>
+          <span class="font-medium">AI Chatbot</span>
+        </a>
+      </nav>
+    </div>
+  </div>
+
+  <div id="sidebarOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-40" onclick="toggleSidebar()"></div>
+
+  <!-- Search Section -->
+  <section class="bg-white shadow-md border-b border-green-100">
+    <div class="container mx-auto px-4 py-6">
+      <div class="flex flex-col md:flex-row gap-4 items-center justify-between">
+        <div class="w-full md:w-1/2 relative">
+          <input id="searchInput" type="text" placeholder="🔍 Search schemes or crops..." 
+                 class="w-full border-2 border-green-200 rounded-lg px-4 py-3 pl-10 focus:ring-2 focus:ring-green-400 outline-none">
+          <i class="fas fa-search absolute left-3 top-4 text-gray-400"></i>
+        </div>
+        <button onclick="refreshData()" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold transition shadow-md flex items-center gap-2">
+          <i class="fas fa-sync-alt"></i>
+          <span id="refreshText">Refresh</span>
+        </button>
+      </div>
+      <div class="mt-4 text-sm text-gray-600 flex items-center gap-2">
+        <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+        <span id="dataSource">LibreTranslate API Translation</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Loading Overlay -->
+  <div id="loadingOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg p-8 flex flex-col items-center gap-4 shadow-2xl">
+      <div class="spinner"></div>
+      <p class="text-gray-700 font-semibold text-lg" id="loadingText">Loading...</p>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <main class="container mx-auto px-4 py-8 space-y-12">
+
+    <!-- Government Schemes -->
+    <section id="schemes">
+      <div class="flex items-center justify-between mb-6">
+        <div>
+          <h2 class="text-3xl font-bold text-green-800 flex items-center gap-3">
+            <span class="text-4xl">🏛️</span>
+            <span id="schemesTitle">Government Schemes</span>
+          </h2>
+          <p class="text-gray-600 mt-2" id="schemesSubtitle">Agricultural schemes from Government of India</p>
+        </div>
+        <button onclick="speakSection('schemes')" class="bg-green-100 text-green-700 px-4 py-2 rounded-lg hover:bg-green-200 transition">
+          <i class="fas fa-volume-up"></i>
+        </button>
+      </div>
+      <div id="schemesContainer" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+      <div id="schemesEmpty" class="hidden text-center py-12">
+        <div class="text-6xl mb-4">📭</div>
+        <p class="text-gray-600">No schemes found</p>
+      </div>
+    </section>
+
+    <hr class="border-2 border-green-200 rounded-full">
+
+    <!-- Market Prices -->
+    <section id="market">
+      <div class="flex items-center justify-between mb-6">
+        <div>
+          <h2 class="text-3xl font-bold text-blue-800 flex items-center gap-3">
+            <span class="text-4xl">💹</span>
+            <span id="marketTitle">Market Prices</span>
+          </h2>
+          <p class="text-gray-600 mt-2" id="marketSubtitle">Live commodity prices from mandis</p>
+        </div>
+        <button onclick="speakSection('market')" class="bg-yellow-100 text-yellow-700 px-4 py-2 rounded-lg hover:bg-yellow-200 transition">
+          <i class="fas fa-volume-up"></i>
+        </button>
+      </div>
+      <div id="marketContainer" class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+    </section>
+
+    <!-- Quick Links -->
+    <section class="bg-gradient-to-r from-green-50 to-blue-50 rounded-2xl p-8 shadow-lg">
+      <h3 class="text-2xl font-bold text-green-800 mb-6 flex items-center gap-2">
+        <span>🔗</span>
+        <span id="quickLinksTitle">Quick Links</span>
+      </h3>
+      <div class="grid md:grid-cols-3 gap-4">
+        <a href="https://pmkisan.gov.in/" target="_blank" class="bg-white p-4 rounded-lg shadow hover:shadow-lg transition flex items-center gap-3">
+          <span class="text-2xl">🌾</span>
+          <div>
+            <p class="font-semibold text-green-700">PM-KISAN</p>
+            <p class="text-sm text-gray-600">Income Support</p>
+          </div>
+        </a>
+        <a href="https://pmfby.gov.in/" target="_blank" class="bg-white p-4 rounded-lg shadow hover:shadow-lg transition flex items-center gap-3">
+          <span class="text-2xl">🛡️</span>
+          <div>
+            <p class="font-semibold text-green-700">PMFBY</p>
+            <p class="text-sm text-gray-600">Crop Insurance</p>
+          </div>
+        </a>
+        <a href="https://www.enam.gov.in/" target="_blank" class="bg-white p-4 rounded-lg shadow hover:shadow-lg transition flex items-center gap-3">
+          <span class="text-2xl">📈</span>
+          <div>
+            <p class="font-semibold text-green-700">e-NAM</p>
+            <p class="text-sm text-gray-600">National Market</p>
+          </div>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <!-- Floating Button -->
+  <button onclick="showAccessibilityMenu()" class="fixed bottom-6 right-6 bg-green-600 text-white p-4 rounded-full shadow-2xl hover:bg-green-700 transition-all hover:scale-110 z-40">
+    <i class="fas fa-universal-access text-xl"></i>
+  </button>
+
+  <!-- Footer -->
+  <footer class="bg-green-800 text-white mt-16 py-8">
+    <div class="container mx-auto px-4 text-center">
+      <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">🌾</span>
+          <p class="text-lg font-semibold">AgroSense – AI Farming Assistant</p>
+        </div>
+        <p class="text-green-200">© 2025 AgroSense. Empowering farmers.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const API = 'https://libretranslate.com/translate';
+    
+    const DATA = {
+      schemes: [
+        { title: "PM Kisan Samman Nidhi", ministry: "Agriculture Ministry", desc: "₹6000 annual support for farmers in 3 installments", link: "https://pmkisan.gov.in/", icon: "💰" },
+        { title: "PM Fasal Bima Yojana", ministry: "Agriculture Ministry", desc: "Crop insurance against natural disasters", link: "https://pmfby.gov.in/", icon: "🛡️" },
+        { title: "Kisan Credit Card", ministry: "Financial Services", desc: "Credit support for agriculture at low interest", link: "https://www.india.gov.in/", icon: "💳" },
+        { title: "Soil Health Card", ministry: "Agriculture Ministry", desc: "Soil testing and recommendations", link: "https://soilhealth.dac.gov.in/", icon: "🌱" },
+        { title: "PM-KUSUM Solar Scheme", ministry: "Renewable Energy", desc: "Solar pumps and power plants", link: "https://mnre.gov.in/", icon: "☀️" },
+        { title: "e-NAM Platform", ministry: "Agriculture Ministry", desc: "Online trading for transparent pricing", link: "https://www.enam.gov.in/", icon: "🌐" }
+      ],
+      market: [
+        { name: "Wheat", state: "Punjab", price: "₹2,150", unit: "Quintal", change: "+2.3%", icon: "🌾", up: true },
+        { name: "Rice", state: "UP", price: "₹1,950", unit: "Quintal", change: "+1.8%", icon: "🍚", up: true },
+        { name: "Mustard", state: "Rajasthan", price: "₹5,250", unit: "Quintal", change: "+3.2%", icon: "🟡", up: true },
+        { name: "Cotton", state: "Gujarat", price: "₹6,800", unit: "Quintal", change: "-0.5%", icon: "⚪", up: false },
+        { name: "Sugarcane", state: "Maharashtra", price: "₹3,050", unit: "Quintal", change: "+0.8%", icon: "🎋", up: true },
+        { name: "Potato", state: "UP", price: "₹1,200", unit: "Quintal", change: "-1.2%", icon: "🥔", up: false },
+        { name: "Onion", state: "Karnataka", price: "₹2,500", unit: "Quintal", change: "+5.1%", icon: "🧅", up: true },
+        { name: "Tomato", state: "AP", price: "₹1,800", unit: "Quintal", change: "+2.7%", icon: "🍅", up: true }
+      ]
+    };
+
+    const UI_TEXTS = {
+      en: { schemesTitle: "Government Schemes", schemesSubtitle: "Agricultural schemes from Government of India", marketTitle: "Market Prices", marketSubtitle: "Live commodity prices from mandis", quickLinksTitle: "Quick Links", refreshText: "Refresh", dataSource: "LibreTranslate API Translation" },
+      hi: { schemesTitle: "सरकारी योजनाएं", schemesSubtitle: "भारत सरकार की कृषि योजनाएं", marketTitle: "बाजार मूल्य", marketSubtitle: "मंडियों से वस्तुओं की लाइव कीमतें", quickLinksTitle: "त्वरित लिंक", refreshText: "रीफ्रेश करें", dataSource: "LibreTranslate API अनुवाद" },
+      pa: { schemesTitle: "ਸਰਕਾਰੀ ਯੋਜਨਾਵਾਂ", schemesSubtitle: "ਭਾਰਤ ਸਰਕਾਰ ਦੀਆਂ ਖੇਤੀਬਾੜੀ ਯੋਜਨਾਵਾਂ", marketTitle: "ਬਾਜ਼ਾਰ ਕੀਮਤਾਂ", marketSubtitle: "ਮੰਡੀਆਂ ਤੋਂ ਵਸਤੂਆਂ ਦੀਆਂ ਲਾਈਵ ਕੀਮਤਾਂ", quickLinksTitle: "ਤੇਜ਼ ਲਿੰਕ", refreshText: "ਰਿਫ੍ਰੈਸ਼ ਕਰੋ", dataSource: "LibreTranslate API ਅਨੁਵਾਦ" }
+    };
+
+    let lang = 'en';
+    let voiceOn = false;
+    let schemes = [];
+    let market = [];
+    let cache = {};
+
+    async function translate(text, to) {
+      if (!text || to === 'en') return text;
+      const key = `${text}_${to}`;
+      if (cache[key]) return cache[key];
+      
+      try {
+        const res = await fetch(API, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ q: text, source: 'en', target: to, format: 'text' })
+        });
+        
+        if (!res.ok) throw new Error('API Error');
+        
+        const data = await res.json();
+        const translated = data.translatedText || text;
+        cache[key] = translated;
+        return translated;
+      } catch (e) {
+        console.error('Translation error:', e);
+        return text;
+      }
+    }
+
+    async function translateBulk(texts, to) {
+      if (to === 'en') return texts;
+      const results = await Promise.all(texts.map(t => translate(t, to)));
+      return results.map((r, i) => r || texts[i]);
+    }
+
+    async function updateUI() {
+      const texts = UI_TEXTS[lang];
+      document.getElementById('schemesTitle').textContent = texts.schemesTitle;
+      document.getElementById('schemesSubtitle').textContent = texts.schemesSubtitle;
+      document.getElementById('marketTitle').textContent = texts.marketTitle;
+      document.getElementById('marketSubtitle').textContent = texts.marketSubtitle;
+      document.getElementById('quickLinksTitle').textContent = texts.quickLinksTitle;
+      document.getElementById('refreshText').textContent = texts.refreshText;
+      document.getElementById('dataSource').textContent = texts.dataSource;
+    }
+
+    async function loadData() {
+      showLoading(true);
+      try {
+        if (lang === 'en') {
+          schemes = [...DATA.schemes];
+          market = [...DATA.market];
+        } else {
+          const schemeTexts = DATA.schemes.flatMap(s => [s.title, s.ministry, s.desc]);
+          const marketTexts = DATA.market.flatMap(m => [m.name, m.state, m.unit]);
+          
+          const [sTranslated, mTranslated] = await Promise.all([
+            translateBulk(schemeTexts, lang),
+            translateBulk(marketTexts, lang)
+          ]);
+          
+          schemes = DATA.schemes.map((s, i) => ({
+            ...s,
+            title: sTranslated[i * 3] || s.title,
+            ministry: sTranslated[i * 3 + 1] || s.ministry,
+            desc: sTranslated[i * 3 + 2] || s.desc
+          }));
+          
+          market = DATA.market.map((m, i) => ({
+            ...m,
+            name: mTranslated[i * 3] || m.name,
+            state: mTranslated[i * 3 + 1] || m.state,
+            unit: mTranslated[i * 3 + 2] || m.unit
+          }));
+        }
+        
+        renderSchemes();
+        renderMarket();
+      } catch (e) {
+        console.error('Load error:', e);
+        schemes = [...DATA.schemes];
+        market = [...DATA.market];
+        renderSchemes();
+        renderMarket();
+      } finally {
+        showLoading(false);
+      }
+    }
+
+    function renderSchemes() {
+      const container = document.getElementById('schemesContainer');
+      const empty = document.getElementById('schemesEmpty');
+      
+      if (!schemes || schemes.length === 0) {
+        container.classList.add('hidden');
+        empty.classList.remove('hidden');
+        return;
+      }
+      
+      container.classList.remove('hidden');
+      empty.classList.add('hidden');
+      
+      container.innerHTML = schemes.map((s, i) => `
+        <div class="bg-white shadow-lg rounded-xl p-6 border-l-4 border-green-500 hover:shadow-xl transition-all hover:-translate-y-1 card-animate" style="animation-delay: ${i * 0.1}s;">
+          <div class="text-3xl mb-3">${s.icon || '📄'}</div>
+          <h3 class="text-xl font-bold text-green-700 mb-3">${s.title || 'Scheme'}</h3>
+          <p class="text-sm text-gray-600 mb-2"><i class="fas fa-building mr-2"></i>${s.ministry || 'Government'}</p>
+          <p class="text-gray-700 text-sm mb-4">${s.desc || 'Description not available'}</p>
+          <a href="${s.link || '#'}" target="_blank" class="inline-flex items-center gap-2 text-green-600 font-semibold hover:underline">
+            Apply <i class="fas fa-arrow-right"></i>
+          </a>
+        </div>
+      `).join('');
+    }
+
+    function renderMarket() {
+      const container = document.getElementById('marketContainer');
+      
+      if (!market || market.length === 0) {
+        container.innerHTML = '<div class="col-span-full text-center text-gray-600">No market data</div>';
+        return;
+      }
+      
+      container.innerHTML = market.map((m, i) => `
+        <div class="bg-white shadow-lg rounded-xl p-6 border-l-4 ${m.up ? 'border-green-500' : 'border-red-500'} hover:shadow-xl transition-all card-animate" style="animation-delay: ${i * 0.05}s;">
+          <div class="flex justify-between items-start mb-3">
+            <span class="text-3xl">${m.icon || '🌾'}</span>
+            <span class="text-xs font-bold px-2 py-1 rounded ${m.up ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}">${m.change || '0%'}</span>
+          </div>
+          <h3 class="text-xl font-bold mb-2">${m.name || 'Commodity'}</h3>
+          <p class="text-sm text-gray-600 mb-2"><i class="fas fa-map-marker-alt mr-2"></i>${m.state || 'India'}</p>
+          <p class="text-2xl font-bold text-gray-900">${m.price || '₹0'}</p>
+          <p class="text-xs text-gray-500">per ${m.unit || 'unit'}</p>
+        </div>
+      `).join('');
+    }
+
+    function showLoading(show) {
+      document.getElementById('loadingOverlay').classList.toggle('hidden', !show);
+    }
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebarOverlay');
+      sidebar.classList.toggle('-translate-x-full');
+      overlay.classList.toggle('hidden');
+    }
+
+    function scrollToSchemes(e) {
+      e.preventDefault();
+      document.getElementById('schemes').scrollIntoView({ behavior: 'smooth' });
+      toggleSidebar();
+    }
+
+    function scrollToMarket(e) {
+      e.preventDefault();
+      document.getElementById('market').scrollIntoView({ behavior: 'smooth' });
+      toggleSidebar();
+    }
+
+    async function refreshData() {
+      showNotification('Refreshing...');
+      await loadData();
+    }
+
+    function toggleVoiceMode() {
+      voiceOn = !voiceOn;
+      document.getElementById('voiceIcon').textContent = voiceOn ? '🔇' : '🔊';
+      showNotification(voiceOn ? 'Voice enabled' : 'Voice disabled');
+    }
+
+    function speakSection(section) {
+      if (!('speechSynthesis' in window)) {
+        alert('Speech synthesis not supported in your browser');
+        return;
+      }
+      
+      speechSynthesis.cancel();
+      
+      const items = section === 'schemes' ? schemes : market;
+      
+      if (!items || items.length === 0) {
+        showNotification('No data to read');
+        return;
+      }
+      
+      const selectedItems = items.slice(0, 3);
+      let currentIndex = 0;
+      
+      function speakNext() {
+        if (currentIndex >= selectedItems.length) return;
+        
+        const item = selectedItems[currentIndex];
+        let text = '';
+        
+        if (section === 'schemes') {
+          text = `${item.title || 'Scheme'}`;
+        } else {
+          text = `${item.name || 'Commodity'}, ${item.state || 'India'}, Price ${item.price || 'not available'}`;
+        }
+        
+        const utterance = new SpeechSynthesisUtterance(text);
+        
+        utterance.lang = lang === 'hi' ? 'hi-IN' : 
+                         lang === 'pa' ? 'pa-IN' : 
+                         'en-IN';
+        
+        utterance.rate = 0.85;
+        utterance.pitch = 1.0;
+        utterance.volume = 1.0;
+        
+        utterance.onend = () => {
+          currentIndex++;
+          if (currentIndex < selectedItems.length) {
+            setTimeout(() => speakNext(), 500);
+          }
+        };
+        
+        utterance.onerror = (e) => {
+          console.error('Speech error:', e);
+          currentIndex++;
+          if (currentIndex < selectedItems.length) {
+            setTimeout(() => speakNext(), 500);
+          }
+        };
+        
+        speechSynthesis.speak(utterance);
+      }
+      
+      speakNext();
+      vibrateDevice();
+    }
+    
+    function vibrateDevice() {
+      if ('vibrate' in navigator) {
+        navigator.vibrate([100, 50, 100]);
+      }
+    }
+
+    function showAccessibilityMenu() {
+      alert('Accessibility:\n• Voice: Click voice button\n• Search: Use search bar\n• Language: Switch languages\n• Text-to-Speech: Click volume icons');
+    }
+
+    function showNotification(msg) {
+      const notif = document.createElement('div');
+      notif.className = 'fixed top-20 right-4 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+      notif.textContent = msg;
+      document.body.appendChild(notif);
+      setTimeout(() => notif.remove(), 2000);
+    }
+
+    document.getElementById('languageSelector').addEventListener('change', async (e) => {
+      lang = e.target.value;
+      localStorage.setItem('agro_lang', lang);
+      await updateUI();
+      await loadData();
+      showNotification('Language changed!');
+    });
+
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+      const term = e.target.value.toLowerCase().trim();
+      
+      if (!term) {
+        loadData();
+        return;
+      }
+      
+      const originalSchemes = lang === 'en' ? DATA.schemes : schemes;
+      const originalMarket = lang === 'en' ? DATA.market : market;
+      
+      const fSchemes = originalSchemes.filter(s => 
+        (s.title && s.title.toLowerCase().includes(term)) || 
+        (s.desc && s.desc.toLowerCase().includes(term)) ||
+        (s.ministry && s.ministry.toLowerCase().includes(term))
+      );
+      
+      const fMarket = originalMarket.filter(m => 
+        (m.name && m.name.toLowerCase().includes(term)) ||
+        (m.state && m.state.toLowerCase().includes(term))
+      );
+      
+      schemes = fSchemes;
+      market = fMarket;
+      renderSchemes();
+      renderMarket();
+    });
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      const saved = localStorage.getItem('agro_lang');
+      if (saved) {
+        lang = saved;
+        document.getElementById('languageSelector').value = lang;
+      }
+      await updateUI();
+      await loadData();
+    });
+  </script>
+</body>
+</html>

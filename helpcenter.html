@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help Center - AgroSense</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in-up { 
+            animation: fadeInUp 0.8s ease-out;
+            animation-fill-mode: both;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, rgba(25, 236, 67, 0.95) 0%, rgba(5, 150, 105, 0.9) 50%, rgba(4, 120, 87, 0.95) 100%);
+        }
+
+        .search-bar {
+            transition: all 0.3s ease;
+        }
+
+        .search-bar:focus-within {
+            transform: scale(1.02);
+            box-shadow: 0 10px 40px rgba(16, 185, 129, 0.3);
+        }
+
+        .category-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+
+        .faq-item {
+            border-bottom: 1px solid #e5e7eb;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+
+        .faq-question {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .faq-question:hover {
+            color: #059669;
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.4s ease;
+        }
+
+        .faq-answer.active {
+            max-height: 500px;
+            padding: 1rem 0;
+        }
+
+        .faq-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .faq-icon.rotate {
+            transform: rotate(180deg);
+        }
+
+        .contact-card {
+            transition: all 0.3s ease;
+        }
+
+        .contact-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.2);
+        }
+
+        .tab-button {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .tab-button::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: #10b981;
+            transition: width 0.3s ease;
+        }
+
+        .tab-button.active::after {
+            width: 100%;
+        }
+
+        .tab-button.active {
+            color: #10b981;
+            font-weight: 600;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeInUp 0.5s ease-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .search-highlight {
+            background: #fef08a;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-40">
+        <div class="container mx-auto px-4 py-3 lg:py-4">
+            <div class="flex items-center justify-between">
+                <a href="index.html" class="flex items-center space-x-2">
+                    <i class="fas fa-leaf text-2xl lg:text-3xl text-green-600"></i>
+                    <span class="text-xl lg:text-2xl font-bold text-gray-800">AgroSense</span>
+                </a>
+                
+                <div class="flex items-center space-x-4">
+                    <a href="index.html" class="text-gray-600 hover:text-green-600 transition flex items-center gap-2">
+                        <i class="fas fa-home"></i>
+                        <span class="hidden sm:inline">Back to Home</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-12 lg:py-16">
+        <div class="container mx-auto px-4 text-center">
+            <div class="fade-in-up">
+                <i class="fas fa-question-circle text-5xl lg:text-6xl mb-4 inline-block"></i>
+                <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">Help Center</h1>
+                <p class="text-lg lg:text-xl mb-8 text-green-50 max-w-2xl mx-auto">Find answers to your questions and get the support you need</p>
+                
+                <!-- Search Bar -->
+                <div class="search-bar max-w-2xl mx-auto bg-white rounded-xl shadow-2xl overflow-hidden">
+                    <div class="flex items-center p-2">
+                        <input 
+                            type="text" 
+                            id="searchInput"
+                            placeholder="Search for help articles, FAQs..." 
+                            class="flex-1 px-4 py-3 text-gray-800 focus:outline-none text-base lg:text-lg"
+                        >
+                        <button class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Categories -->
+    <section class="py-12 lg:py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-2xl lg:text-3xl font-bold text-gray-800 mb-8 text-center">Browse by Category</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="category-card bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-xl border-2 border-green-200" data-category="getting-started">
+                    <div class="text-4xl text-green-600 mb-4">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Getting Started</h3>
+                    <p class="text-gray-600 text-sm mb-3">Learn the basics and setup your account</p>
+                    <span class="text-green-600 font-semibold text-sm">12 Articles →</span>
+                </div>
+
+                <div class="category-card bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-xl border-2 border-blue-200" data-category="features">
+                    <div class="text-4xl text-blue-600 mb-4">
+                        <i class="fas fa-cog"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Features Guide</h3>
+                    <p class="text-gray-600 text-sm mb-3">Explore all AgroSense features</p>
+                    <span class="text-blue-600 font-semibold text-sm">18 Articles →</span>
+                </div>
+
+                <div class="category-card bg-gradient-to-br from-yellow-50 to-yellow-100 p-6 rounded-xl border-2 border-yellow-200" data-category="troubleshooting">
+                    <div class="text-4xl text-yellow-600 mb-4">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Troubleshooting</h3>
+                    <p class="text-gray-600 text-sm mb-3">Fix common issues quickly</p>
+                    <span class="text-yellow-600 font-semibold text-sm">15 Articles →</span>
+                </div>
+
+                <div class="category-card bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-xl border-2 border-purple-200" data-category="account">
+                    <div class="text-4xl text-purple-600 mb-4">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Account & Billing</h3>
+                    <p class="text-gray-600 text-sm mb-3">Manage your account settings</p>
+                    <span class="text-purple-600 font-semibold text-sm">10 Articles →</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section with Tabs -->
+    <section class="py-12 lg:py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <h2 class="text-2xl lg:text-3xl font-bold text-gray-800 mb-8 text-center">Frequently Asked Questions</h2>
+            
+            <!-- Tabs -->
+            <div class="flex flex-wrap justify-center gap-4 mb-8">
+                <button class="tab-button active px-6 py-3 text-gray-600 font-medium" data-tab="general">General</button>
+                <button class="tab-button px-6 py-3 text-gray-600 font-medium" data-tab="technical">Technical</button>
+                <button class="tab-button px-6 py-3 text-gray-600 font-medium" data-tab="billing">Billing</button>
+                <button class="tab-button px-6 py-3 text-gray-600 font-medium" data-tab="features">Features</button>
+            </div>
+
+            <!-- General FAQs -->
+            <div class="tab-content active max-w-4xl mx-auto" id="general">
+                <div class="bg-white rounded-xl shadow-lg p-6 lg:p-8">
+                    <div class="faq-item">
+                        <div class="faq-question flex items-center justify-between py-4">
+                            <h3 class="text-lg font-semibold text-gray-800 flex-1">What is AgroSense?</h3>
+                            <i class="fas fa-chevron-down faq-icon text-green-600"></i>
+                        </div>
+                        <div class="faq-answer text-gray-600">
+                            AgroSense is a comprehensive smart farming platform that combines cutting-edge technology with agricultural expertise. We provide real-time monitoring, weather forecasting, pest detection, market intelligence, and AI-powered assistance to help farmers make data-driven decisions and increase productivity.
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question flex items-center justify-between py-4">
+                            <h3 class="text-lg font-semibold text-gray-800 flex-1">How do I create an account?</h3>
+                            <i class="fas fa-chevron-down faq-icon text-green-600"></i>
+                        </div>
+                        <div class="faq-answer text-gray-600">
+                            Creating an account is simple! Click the "Sign Up" button on the homepage, enter your mobile number or email, verify your OTP, and complete your profile with basic farm details. You'll get instant access to our free tier features.
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question flex items-center justify-between py-4">
+                            <h3 class="text-lg font-semibold text-gray-800 flex-1">Is AgroSense available in my language?</h3>
+                            <i class="fas fa-chevron-down faq-icon text-green-600"></i>
+                        </div>
+                        <div class="faq-answer text-gray-600">
+                            Yes! AgroSense supports multiple Indian languages including Hindi, Punjabi, Kannada, Tamil, Telugu, Marathi, and English. You can change your language preference anytime from the settings menu or the language selector in the navigation bar.
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question flex items-center justify-between py-4">
+                            <h3 class="text-lg font-semibold text-gray-800 flex-1">What devices are supported?</h3>
+                            <i class="fas fa-chevron-down faq-icon text-green-600"></i>
+                        </div>
+                        <div class="faq-answer text-gray-600">
+                            AgroSense works on smartphones (Android & iOS), tablets, and computers. You can access it through our mobile app or web browser. The platform is optimized for all screen sizes and works even with slow internet connections.
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question flex items-center justify-between py-4">
+                            <h3 class="text-lg font-semibold text-gray-800 flex-1">Is there a free trial available?</h3>
+                            <i class="fas fa-chevron-down faq-icon text-green-600"></i>
+                        </div>
+                        <div class="faq-answer text-gray-600">
+                            Yes! We offer a 30-day free trial with full access to all premium features. No credit card required. After the trial, you can choose to continue with our free basic plan or upgrade to a premium plan for advanced features.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Technical FAQs -->
+            <div class="tab-content max-w-4xl mx-auto" id="technical">
+                <div class="bg-white rounded-xl shadow-lg p-6 lg:p-8">
+                    <div class="faq-item">
+                        <div class="faq-question flex items-center justify-between py-4">
+                            <h3 class="text-lg font-semibold text-gray-800 flex-1">How accurate is the weather forecast?</h3>
+                            <i class="fas fa-chevron-down faq-icon text-green-600"></i>
+                        </div>
+                        <div class="faq-answer text-gray-600">
+                            Our weather predictions use advanced AI models combined with data from multiple meteorological sources, achieving 85-90% accuracy for 7-day forecasts. We provide hyperlocal predictions specific to your farm's GPS coordinates, updated every 6 hours.
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question flex items-center justify-between py-4">
+                            <h3 class="text-lg font-semibold text-gray-800 flex-1">How does the pest detection feature work?</h3>
+                            <i class="fas fa-chevron-down faq-icon text-green-600"></i>
+                        </div>
+                        <div class="faq-answer text-gray-600">
+                            Simply take a photo of the affected crop using your smartphone. Our AI analyzes the image to identify pests, diseases, or nutrient deficiencies within seconds. You'll receive detailed information about the problem and recommended treatments in your language.
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question flex items-center justify-between py-4">
+                            <h3 class="text-lg font-semibold text-gray-800 flex-1">Can I use AgroSense offline?</h3>
+                            <i class="fas fa-chevron-down faq-icon text-green-600"></i>
+                        </div>
+                        <div class="faq-answer text-gray-600">
+                            The mobile app offers limited offline functionality. You can view previously loaded data, access saved articles, and record farm activities offline. The data will sync automatically when you reconnect to the internet.
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question flex items-center justify-between py-4">
+                            <h3 class="text-lg font-semibold text-gray-800 flex-1">How do I set up soil monitoring sensors?</h3>
+                            <i class="fas fa-chevron-down faq-icon text-green-600"></i>
+                        </div>
+                        <div class="faq-answer text-gray-600">
+                            If you have compatible IoT sensors, you can connect them via the "Add Device" option in settings. Follow the step-by-step pairing guide in the app. For sensors purchased from our partners, we offer free installation assistance.
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question flex items-center justify-between py-4">
+                            <h3 class="text-lg font-semibold text-gray-800 flex-1">What if the app crashes or has bugs?</h3>
+                            <i class="fas fa-chevron-down faq-icon text-green-600"></i>
+                        </div>
+                        <div class="faq-answer text-gray-600">
+                            First, try restarting the app and checking for updates. If the problem persists, report it through the "Report Bug" option in settings with a screenshot. Our technical team typically responds within 24 hours.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Billing FAQs -->
+            <div class="tab-content max-w-4xl mx-auto" id="billing">
+                <div class="bg-white rounded-xl shadow-lg p-6 lg:p-8">
+                    <div class="faq-item">
+                        <div class="faq-question flex items-center justify-between py-4">
+                            <h3 class="text-lg font-semibold text-gray-800 flex-1">What payment methods do you accept?</h3>
+                            <i class="fas fa-chevron-down faq-icon text-green-600"></i>
+                        </div>
+                        <div class="faq-answer text-gray-600">
+                            We accept UPI, debit/credit cards, net banking, mobile wallets, and cash on delivery (for hardware purchases). All transactions are secured with bank-grade encryption.
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question flex items-center justify-between py-4">
+                            <h3 class="text-lg font-semibold text-gray-800 flex-1">Can I cancel my subscription anytime?</h3>
+                            <i class="fas fa-chevron-down faq-icon text-green-600"></i>
+                        </div>
+                        <div class="faq-answer text-gray-600">
+                            Yes, you can cancel anytime without penalties. You'll continue to have access to premium features until the end of your billing cycle. After that, you'll automatically switch to the free plan.
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question flex items-center justify-between py-4">
+                            <h3 class="text-lg font-semibold text-gray-800 flex-1">Do you offer refunds?</h3>
+                            <i class="fas fa-chevron-down faq-icon text-green-600"></i>
+                        </div>
+                        <div class="faq-answer text-gray-600">
+                            We offer a 7-day money-back guarantee for premium subscriptions. If you're not satisfied, contact support within 7 days of purchase for a full refund. Refunds are processed within 5-7 business days.
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question flex items-center justify-between py-4">
+                            <h3 class="text-lg font-semibold text-gray-800 flex-1">Are there any discounts available?</h3>
+                            <i class="fas fa-chevron-down faq-icon text-green-600"></i>
+                        </div>
+                        <div class="faq-answer text-gray-600">
+                            Yes! We offer 20% discount on annual plans, special pricing for farmer cooperatives, and seasonal promotions. Students and small farmers may qualify for additional subsidies through our partnership with government schemes.
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question flex items-center justify-between py-4">
+                            <h3 class="text-lg font-semibold text-gray-800 flex-1">How do I upgrade or downgrade my plan?</h3>
+                            <i class="fas fa-chevron-down faq-icon text-green-600"></i>
+                        </div>
+                        <div class="faq-answer text-gray-600">
+                            Go to Settings → Subscription → Change Plan. You can upgrade anytime (charges prorated). Downgrades take effect at the end of your current billing cycle.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Features FAQs -->
+            <div class="tab-content max-w-4xl mx-auto" id="features">
+                <div class="bg-white rounded-xl shadow-lg p-6 lg:p-8">
+                    <div class="faq-item">
+                        <div class="faq-question flex items-center justify-between py-4">
+                            <h3 class="text-lg font-semibold text-gray-800 flex-1">How does the AI voice assistant work?</h3>
+                            <i class="fas fa-chevron-down faq-icon text-green-600"></i>
+                        </div>
+                        <div class="faq-answer text-gray-600">
+                            Click the microphone icon and speak your question in your preferred language. The AI understands natural language queries about farming practices, weather, pests, and more. It responds with voice answers and shows relevant information on screen.
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question flex items-center justify-between py-4">
+                            <h3 class="text-lg font-semibold text-gray-800 flex-1">Where does market price data come from?</h3>
+                            <i class="fas fa-chevron-down faq-icon text-green-600"></i>
+                        </div>
+                        <div class="faq-answer text-gray-600">
+                            We aggregate real-time data from government AGMARKNET portals, local mandis, and verified traders. Prices are updated multiple times daily and show trends to help you decide the best time to sell.
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question flex items-center justify-between py-4">
+                            <h3 class="text-lg font-semibold text-gray-800 flex-1">Can I track multiple farms?</h3>
+                            <i class="fas fa-chevron-down faq-icon text-green-600"></i>
+                        </div>
+                        <div class="faq-answer text-gray-600">
+                            Yes! Premium users can add unlimited farm locations. Each farm has its own dashboard with customized weather, soil data, and crop recommendations. Switch between farms easily from the menu.
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question flex items-center justify-between py-4">
+                            <h3 class="text-lg font-semibold text-gray-800 flex-1">How do I get crop recommendations?</h3>
+                            <i class="fas fa-chevron-down faq-icon text-green-600"></i>
+                        </div>
+                        <div class="faq-answer text-gray-600">
+                            Based on your location, soil type, season, and historical data, our AI suggests the best crops to grow. You'll see potential yield estimates, required inputs, and expected market prices for informed decision-making.
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question flex items-center justify-between py-4">
+                            <h3 class="text-lg font-semibold text-gray-800 flex-1">Can I share data with my agronomist?</h3>
+                            <i class="fas fa-chevron-down faq-icon text-green-600"></i>
+                        </div>
+                        <div class="faq-answer text-gray-600">
+                            Yes! You can invite agronomists, family members, or farm workers to view your data. Set different permission levels (view-only or full access) for each person from the sharing settings.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Support -->
+    <section class="py-12 lg:py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-2xl lg:text-3xl font-bold text-gray-800 mb-4">Still Need Help?</h2>
+                <p class="text-gray-600 text-lg">Our support team is here for you 24/7</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+                <div class="contact-card bg-gradient-to-br from-green-50 to-green-100 p-8 rounded-xl text-center border-2 border-green-200">
+                    <div class="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center text-white text-2xl mx-auto mb-4">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Call Us</h3>
+                    <p class="text-gray-600 mb-4">Speak with our support team</p>
+                    <a href="tel:+911800123456" class="text-green-600 font-semibold hover:text-green-700">+91 1800-123-4567</a>
+                    <p class="text-sm text-gray-500 mt-2">Mon-Sat, 9 AM - 6 PM</p>
+                </div>
+
+                <div class="contact-card bg-gradient-to-br from-blue-50 to-blue-100 p-8 rounded-xl text-center border-2 border-blue-200">
+                    <div class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center text-white text-2xl mx-auto mb-4">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Email Us</h3>
+                    <p class="text-gray-600 mb-4">Get help via email</p>
+                    <a href="mailto:support@agrosense.com" class="text-blue-600 font-semibold hover:text-blue-700">support@agrosense.com</a>
+                    <p class="text-sm text-gray-500 mt-2">Response within 24 hours</p>
+                </div>
+
+                <div class="contact-card bg-gradient-to-br from-purple-50 to-purple-100 p-8 rounded-xl text-center border-2 border-purple-200">
+                    <div class="w-16 h-16 bg-purple-600 rounded-full flex items-center justify-center text-white text-2xl mx-auto mb-4">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Live Chat</h3>
+                    <p class="text-gray-600 mb-4">Chat with us instantly</p>
+                    <button onclick="alert('Live chat feature coming soon!')" class="text-purple-600 font-semibold hover:text-purple-700">Start Chat →</button>
+                    <p class="text-sm text-gray-500 mt-2">Available 24/7</p>
+                </div>
+            </div>
+
+            <!-- Submit Ticket -->
+            <div class="max-w-2xl mx-auto mt-12 bg-gray-50 p-8 rounded-xl border-2 border-gray-200">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">Submit a Support Ticket</h3>
+                <form class="space-y-4">
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-2">Your Name</label>
+                        <input type="text" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-green-500" placeholder="Enter your name">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-2">Email Address</label>
+                        <input type="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-green-500" placeholder="Enter your email">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-2">Issue Category</label>
+                        <select class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-green-500">
+                            <option>Select a category</option>
+                            <option>Technical Issue</option>
+                            <option>Billing Question</option>
+                            <option>Feature Request</option>
+                            <option>Account Help</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-2">Describe Your Issue</label>
+                        <textarea rows="5" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-green-500" placeholder="Please describe your issue in detail..."></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-2">Attach Screenshot (Optional)</label>
+                        <input type="file" accept="image/*" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-green-500">
+                    </div>
+                    <button type="submit" class="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white py-4 rounded-lg font-semibold hover:shadow-lg transition-all hover:scale-105">
+                        <i class="fas fa-paper-plane mr-2"></i>
+                        Submit Ticket
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Video Tutorials -->
+    <section class="py-12 lg:py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-2xl lg:text-3xl font-bold text-gray-800 mb-4">Video Tutorials</h2>
+                <p class="text-gray-600 text-lg">Learn how to use AgroSense with our step-by-step guides</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition">
+                    <div class="bg-gradient-to-br from-green-500 to-green-600 h-48 flex items-center justify-center text-white">
+                        <i class="fas fa-play-circle text-6xl opacity-80 hover:opacity-100 transition cursor-pointer"></i>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Getting Started with AgroSense</h3>
+                        <p class="text-gray-600 mb-4">Learn the basics in 5 minutes</p>
+                        <div class="flex items-center text-sm text-gray-500">
+                            <i class="fas fa-clock mr-2"></i>
+                            <span>5:32 mins</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition">
+                    <div class="bg-gradient-to-br from-blue-500 to-blue-600 h-48 flex items-center justify-center text-white">
+                        <i class="fas fa-play-circle text-6xl opacity-80 hover:opacity-100 transition cursor-pointer"></i>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Using Weather Predictions</h3>
+                        <p class="text-gray-600 mb-4">Plan your farming activities effectively</p>
+                        <div class="flex items-center text-sm text-gray-500">
+                            <i class="fas fa-clock mr-2"></i>
+                            <span>7:15 mins</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition">
+                    <div class="bg-gradient-to-br from-purple-500 to-purple-600 h-48 flex items-center justify-center text-white">
+                        <i class="fas fa-play-circle text-6xl opacity-80 hover:opacity-100 transition cursor-pointer"></i>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Pest Detection Tutorial</h3>
+                        <p class="text-gray-600 mb-4">Identify and treat crop diseases</p>
+                        <div class="flex items-center text-sm text-gray-500">
+                            <i class="fas fa-clock mr-2"></i>
+                            <span>6:45 mins</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Popular Articles -->
+    <section class="py-12 lg:py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-2xl lg:text-3xl font-bold text-gray-800 mb-4">Popular Help Articles</h2>
+                <p class="text-gray-600 text-lg">Most viewed articles this month</p>
+            </div>
+
+            <div class="max-w-4xl mx-auto space-y-4">
+                <a href="#" class="block bg-gray-50 p-6 rounded-lg hover:bg-green-50 transition border border-gray-200 hover:border-green-300">
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center text-green-600 text-xl flex-shrink-0">
+                            <i class="fas fa-book-open"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-lg font-bold text-gray-800 mb-2">How to interpret soil moisture readings</h3>
+                            <p class="text-gray-600 text-sm mb-2">Learn what different moisture levels mean and how to optimize irrigation based on sensor data.</p>
+                            <div class="flex items-center gap-4 text-sm text-gray-500">
+                                <span><i class="fas fa-eye mr-1"></i>2,543 views</span>
+                                <span><i class="fas fa-thumbs-up mr-1"></i>412 helpful</span>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-right text-gray-400"></i>
+                    </div>
+                </a>
+
+                <a href="#" class="block bg-gray-50 p-6 rounded-lg hover:bg-green-50 transition border border-gray-200 hover:border-green-300">
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600 text-xl flex-shrink-0">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-lg font-bold text-gray-800 mb-2">Setting up the AgroSense mobile app</h3>
+                            <p class="text-gray-600 text-sm mb-2">Complete guide to downloading, installing, and configuring the mobile app on Android and iOS.</p>
+                            <div class="flex items-center gap-4 text-sm text-gray-500">
+                                <span><i class="fas fa-eye mr-1"></i>1,876 views</span>
+                                <span><i class="fas fa-thumbs-up mr-1"></i>389 helpful</span>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-right text-gray-400"></i>
+                    </div>
+                </a>
+
+                <a href="#" class="block bg-gray-50 p-6 rounded-lg hover:bg-green-50 transition border border-gray-200 hover:border-green-300">
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center text-yellow-600 text-xl flex-shrink-0">
+                            <i class="fas fa-bug"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-lg font-bold text-gray-800 mb-2">Common pest identification mistakes</h3>
+                            <p class="text-gray-600 text-sm mb-2">Tips for taking better photos and avoiding misidentification of crop pests and diseases.</p>
+                            <div class="flex items-center gap-4 text-sm text-gray-500">
+                                <span><i class="fas fa-eye mr-1"></i>1,654 views</span>
+                                <span><i class="fas fa-thumbs-up mr-1"></i>298 helpful</span>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-right text-gray-400"></i>
+                    </div>
+                </a>
+
+                <a href="#" class="block bg-gray-50 p-6 rounded-lg hover:bg-green-50 transition border border-gray-200 hover:border-green-300">
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center text-purple-600 text-xl flex-shrink-0">
+                            <i class="fas fa-credit-card"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-lg font-bold text-gray-800 mb-2">Understanding subscription plans and pricing</h3>
+                            <p class="text-gray-600 text-sm mb-2">Detailed breakdown of features included in each plan and how to choose the right one.</p>
+                            <div class="flex items-center gap-4 text-sm text-gray-500">
+                                <span><i class="fas fa-eye mr-1"></i>1,432 views</span>
+                                <span><i class="fas fa-thumbs-up mr-1"></i>267 helpful</span>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-right text-gray-400"></i>
+                    </div>
+                </a>
+
+                <a href="#" class="block bg-gray-50 p-6 rounded-lg hover:bg-green-50 transition border border-gray-200 hover:border-green-300">
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center text-red-600 text-xl flex-shrink-0">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-lg font-bold text-gray-800 mb-2">Using voice commands with the AI assistant</h3>
+                            <p class="text-gray-600 text-sm mb-2">Master voice interactions and get instant answers in your preferred language.</p>
+                            <div class="flex items-center gap-4 text-sm text-gray-500">
+                                <span><i class="fas fa-eye mr-1"></i>1,287 views</span>
+                                <span><i class="fas fa-thumbs-up mr-1"></i>245 helpful</span>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-right text-gray-400"></i>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <i class="fas fa-leaf text-3xl text-green-500"></i>
+                        <span class="text-2xl font-bold">AgroSense</span>
+                    </div>
+                    <p class="text-gray-400 leading-relaxed">Empowering farmers with smart technology for sustainable agriculture.</p>
+                </div>
+
+                <div>
+                    <h4 class="text-lg font-bold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="text-gray-400 hover:text-green-500 transition">Home</a></li>
+                        <li><a href="index.html#features" class="text-gray-400 hover:text-green-500 transition">Features</a></li>
+                        <li><a href="index.html#about" class="text-gray-400 hover:text-green-500 transition">About Us</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-green-500 transition">Pricing</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-lg font-bold mb-4">Support</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-green-500 transition">Help Center</a></li>
+                        <li><a href="feedbackform.html" class="text-gray-400 hover:text-green-500 transition">Contact Us</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-green-500 transition">FAQs</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-green-500 transition">Privacy Policy</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-lg font-bold mb-4">Connect With Us</h4>
+                    <div class="flex space-x-4 mb-4">
+                        <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-green-600 transition">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-green-600 transition">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-green-600 transition">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-green-600 transition">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                    <p class="text-gray-400 text-sm">Email: support@agrosense.com</p>
+                    <p class="text-gray-400 text-sm">Phone: +91 1800-123-4567</p>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-800 pt-8 text-center">
+                <p class="text-gray-400">&copy; 2024 AgroSense. All rights reserved. Made with <i class="fas fa-heart text-red-500"></i> for farmers.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // FAQ Accordion
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const answer = question.nextElementSibling;
+                const icon = question.querySelector('.faq-icon');
+                
+                // Close all other FAQs
+                document.querySelectorAll('.faq-answer').forEach(otherAnswer => {
+                    if (otherAnswer !== answer) {
+                        otherAnswer.classList.remove('active');
+                        otherAnswer.previousElementSibling.querySelector('.faq-icon').classList.remove('rotate');
+                    }
+                });
+                
+                // Toggle current FAQ
+                answer.classList.toggle('active');
+                icon.classList.toggle('rotate');
+            });
+        });
+
+        // Tab Navigation
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.addEventListener('click', () => {
+                const tabName = button.dataset.tab;
+                
+                // Remove active class from all tabs and buttons
+                document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                
+                // Add active class to clicked tab and corresponding content
+                button.classList.add('active');
+                document.getElementById(tabName).classList.add('active');
+            });
+        });
+
+        // Search Functionality
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            
+            if (searchTerm.length > 2) {
+                // Simple search simulation - in real app, this would query a database
+                console.log('Searching for:', searchTerm);
+                // You can implement actual search highlighting here
+            }
+        });
+
+        // Category Cards Click
+        document.querySelectorAll('.category-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const category = card.dataset.category;
+                alert(`Loading ${category} articles...`);
+                // In real app, this would navigate to filtered results
+            });
+        });
+
+        // Form Submission
+        document.querySelector('form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Thank you! Your support ticket has been submitted. We\'ll get back to you within 24 hours.');
+            e.target.reset();
+        });
+
+        // Smooth Scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
